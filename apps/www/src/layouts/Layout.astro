@@ -1,0 +1,53 @@
+---
+interface Props {
+	title: string
+	description: string
+}
+
+const { title, description } = Astro.props
+import '@fontsource/geist-mono'
+import '@/styles/global.css'
+import { ClientRouter } from 'astro:transitions'
+import { SEO } from 'astro-seo'
+import { getLangFromUrl } from '@/i18n/utils'
+
+const lang = getLangFromUrl(Astro.url)
+---
+
+<!doctype html>
+<html lang={lang}>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<SEO
+			title={title}
+			titleTemplate="%s :: vanx.chat"
+			description={description}
+			canonical={Astro.url.toString()}
+			openGraph={{
+				basic: {
+					title: 'vanx.chat - AI Collaboration Hub',
+					type: 'website',
+					image: 'https://vanx.chat/og-image.jpg'
+				},
+				image: {
+					alt: 'vanx.chat - The world\'s most intelligent AI interaction hub'
+				},
+				optional: {
+					description: description
+				}
+			}}
+			twitter={{
+				creator: '@vanxchat'
+			}}
+		/>
+		<link rel="alternate" href={`${Astro.site}en/`} hreflang="en" />
+		<link rel="alternate" href={`${Astro.site}es/`} hreflang="es" />
+		<link rel="sitemap" href="/sitemap-index.xml" />
+		<link rel="icon" href="/favicon_transparent.svg" type="image/svg+xml" />
+		<ClientRouter />
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
