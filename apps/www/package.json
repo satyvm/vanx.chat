@@ -2,18 +2,34 @@
   "name": "@workspace/www",
   "type": "module",
   "version": "0.0.1",
+  "description": "The world's most intelligent and collaborative AI interaction hub",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "echo 'No linting configured for Astro app'",
+    "lint": "eslint \"src/**/*.{js,ts,astro}\" --fix",
     "check-types": "astro check"
   },
   "dependencies": {
-    "astro": "^5.13.5"
+    "@astrojs/react": "^4.3.0",
+    "@astrojs/sitemap": "^3.5.1",
+    "@fontsource/geist-mono": "^5.2.6",
+    "@fontsource/roboto": "^5.2.5",
+    "@tailwindcss/vite": "^4.1.5",
+    "astro": "^5.13.5",
+    "astro-robots-txt": "^1.0.0",
+    "astro-seo": "^0.8.4",
+    "lucide-react": "^0.508.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.1.5"
   },
   "devDependencies": {
+    "prettier": "^3.5.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.6.11",
+    "sharp": "^0.34.1",
     "@workspace/eslint-config": "workspace:*",
     "@workspace/typescript-config": "workspace:*"
   }

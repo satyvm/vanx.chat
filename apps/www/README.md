@@ -1,33 +1,26 @@
-# Astro Starter Kit: Minimal
+# vanx.chat
 
-```sh
-pnpm create astro@latest -- --template minimal
-```
+The world's most intelligent and collaborative AI interaction hub.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## 🚀 Vision & Mission
 
-## 🚀 Project Structure
+**Vision:** To create the world's most intelligent and collaborative AI interaction hub, transforming how individuals and teams access and leverage artificial intelligence.
 
-Inside of your Astro project, you'll see the following folders and files:
+**Mission:** To unify the fragmented AI landscape into a single, seamless platform that enhances productivity and creativity through intelligent model orchestration, collaborative workflows, and a superior, user-centric experience.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
-```
+## 🎯 What We Solve
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+The current AI ecosystem is siloed and inefficient for serious users and teams:
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+- **Tool Fragmentation:** Users constantly switch between different AI apps
+- **Lack of Collaboration:** AI chat is predominantly a single-player experience
+- **Inefficient Exploration:** No easy way to explore different conversation paths
+- **Information Overload:** Chat histories become cluttered and unsearchable
+- **Manual Optimization:** Users guess which AI model is best for their task
 
-Any static assets, like images, can be placed in the `public/` directory.
+## 🛠️ Development
 
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
+All commands are run from the root of the project:
 
 | Command                   | Action                                           |
 | :------------------------ | :----------------------------------------------- |
@@ -36,8 +29,29 @@ All commands are run from the root of the project, from a terminal:
 | `pnpm build`           | Build your production site to `./dist/`          |
 | `pnpm preview`         | Preview your build locally, before deploying     |
 | `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
 
-## 👀 Want to learn more?
+## 🏗️ Project Structure
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```text
+/
+├── public/
+│   ├── favicon.svg
+│   └── fonts/
+├── src/
+│   ├── components/
+│   ├── i18n/
+│   ├── layouts/
+│   ├── pages/
+│   └── styles/
+└── package.json
+```
+
+## 🌐 Features
+
+- **Intelligent Model Orchestration:** Smart routing to the best AI model for each task
+- **Collaborative Workspaces:** Team-based AI interactions with shared memory
+- **Conversation Branching:** Explore multiple paths in a single conversation
+- **Unified Interface:** Access all AI models through one beautiful interface
+- **Multi-language Support:** Available in English and Spanish
+
+Built with [Astro](https://astro.build) and deployed at [vanx.chat](https://vanx.chat).
