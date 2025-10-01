@@ -1,157 +1,304 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# VanX.Chat API
 
-<p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+> Backend API for the world's most intelligent and collaborative AI interaction hub
 
-<p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-<a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-<a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-<a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
+## Overview
 
-## Description
+The VanX.Chat API is built with NestJS and provides the backend services for the VanX.Chat platform. It handles:
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **AI Model Integration**: Connect and orchestrate multiple AI providers
+- **User Management**: Authentication, authorization, and user profiles
+- **Chat & Conversations**: Real-time chat with AI models and conversation history
+- **Team Collaboration**: Workspace management and shared AI interactions
+- **Data Analytics**: Usage tracking and performance insights
 
-## Project Setup
+## Technology Stack
+
+- **Framework**: [NestJS](https://nestjs.com/) - Progressive Node.js framework
+- **Language**: TypeScript with strict mode
+- **Database**: *TBD* - Likely PostgreSQL for primary data
+- **Cache**: *TBD* - Likely Redis for session management
+- **Auth**: *TBD* - JWT-based authentication
+- **Validation**: Class-validator for request validation
+- **Testing**: Jest for unit and integration tests
+
+## Development
+
+### Prerequisites
+
+- Node.js ≥18.0.0
+- pnpm ≥9.0.0
+- Database setup (when implemented)
+
+### Quick Start
+
+From the **root of the monorepo**:
 
 ```bash
+# Install dependencies
 pnpm install
+
+# Start API in development mode
+turbo dev --filter=api
+
+# Or start all services
+turbo dev
 ```
 
-## 🗄️ Local Database Setup (PostgreSQL)
+The API will be available at: http://localhost:3000
 
-Follow these steps to set up PostgreSQL locally for development.
+### API-Specific Commands
 
-### 1. Install PostgreSQL
-
-**macOS (Homebrew):**
+From the **root of the monorepo**:
 
 ```bash
-brew install postgresql@16
-brew services start postgresql@16
+# Development
+turbo dev --filter=api          # Start with hot reload
+pnpm start --filter=api        # Start in production mode
+turbo build --filter=api        # Build for production
+
+# Testing
+turbo test --filter=api         # Run unit tests
+pnpm test:watch --filter=api   # Run tests in watch mode
+turbo test:e2e --filter=api     # Run end-to-end tests
+turbo test:cov --filter=api     # Run with coverage
+
+# Code Quality
+turbo lint --filter=api         # Lint the code
+pnpm format --filter=api       # Format the code
 ```
 
-### 2. Create Database and User
+### Environment Variables
 
-Connect to PostgreSQL:
+Create `.env.local` in the `apps/api` directory:
 
 ```bash
-psql -U postgres
+# Database
+DATABASE_URL=postgresql://user:pass@localhost:5432/vanx_dev
+REDIS_URL=redis://localhost:6379
+
+# Authentication
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=7d
+
+# AI Provider APIs
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_AI_API_KEY=...
+
+# Application
+NODE_ENV=development
+PORT=3000
+API_VERSION=v1
+
+# External Services
+CORS_ORIGIN=http://localhost:3001
 ```
 
-Create the user and database:
+## Project Structure
 
-```sql
-CREATE USER vanx WITH PASSWORD 'vanxpass';
-CREATE DATABASE vanx_dev OWNER vanx;
-GRANT ALL PRIVILEGES ON DATABASE vanx_dev TO vanx;
+```
+apps/api/src/
+├── auth/                 # Authentication & authorization
+├── users/                # User management
+├── conversations/        # Chat and conversation logic
+├── ai-models/           # AI provider integrations
+├── workspaces/          # Team collaboration features
+├── analytics/           # Usage tracking and insights
+├── common/              # Shared utilities and decorators
+│   ├── guards/         # Auth guards
+│   ├── interceptors/   # Request/response interceptors
+│   ├── pipes/          # Validation pipes
+│   └── filters/        # Exception filters
+├── config/              # Configuration modules
+└── database/            # Database schemas and migrations
 ```
 
-### 3. Verify Connection
+## API Endpoints
+
+### Authentication
+- `POST /auth/login` - User login
+- `POST /auth/register` - User registration
+- `POST /auth/refresh` - Refresh access token
+- `POST /auth/logout` - User logout
+
+### Users
+- `GET /users/profile` - Get user profile
+- `PUT /users/profile` - Update user profile
+- `GET /users/usage` - Get usage statistics
+
+### Conversations
+- `GET /conversations` - List user conversations
+- `POST /conversations` - Create new conversation
+- `GET /conversations/:id` - Get conversation details
+- `POST /conversations/:id/messages` - Send message
+- `DELETE /conversations/:id` - Delete conversation
+
+### AI Models
+- `GET /ai-models` - List available AI models
+- `POST /ai-models/chat` - Send chat message to AI
+- `GET /ai-models/usage` - Get model usage statistics
+
+### Workspaces (Team Features)
+- `GET /workspaces` - List user workspaces
+- `POST /workspaces` - Create workspace
+- `GET /workspaces/:id` - Get workspace details
+- `POST /workspaces/:id/invite` - Invite team members
+
+## Testing
+
+### Unit Tests
 
 ```bash
-psql -h localhost -U vanx -d vanx_dev
+# Run all unit tests
+pnpm --filter=api test
+
+# Run specific test file
+pnpm --filter=api test auth.service.spec.ts
+
+# Run with coverage
+pnpm --filter=api test:cov
 ```
 
-### 4. Configure Environment Variables
-
-Add the following to `apps/api/.env`:
-
-```env
-DATABASE_URL="postgresql://vanx:vanxpass@localhost:5432/vanx_dev"
-```
-
-### 5. Prisma Setup
-
-Generate Prisma client:
+### E2E Tests
 
 ```bash
-pnpm prisma generate
+# Run all e2e tests
+pnpm --filter=api test:e2e
+
+# Run specific e2e test
+pnpm --filter=api test:e2e auth.e2e-spec.ts
 ```
 
-Run database migrations:
+### Test Structure
 
-```bash
-pnpm prisma migrate dev --name init
 ```
-
-### 6. Seed Database (Optional)
-
-```bash
-npx prisma db seed
-```
-
-## Compile and Run the Project
-
-```bash
-# development
-pnpm run start
-
-# watch mode
-pnpm run start:dev
-
-# production mode
-pnpm run start:prod
-```
-
-## Run Tests
-
-```bash
-# unit tests
-pnpm run test
-
-# e2e tests
-pnpm run test:e2e
-
-# test coverage
-pnpm run test:cov
+test/
+├── auth.e2e-spec.ts         # Auth endpoints
+├── users.e2e-spec.ts        # User endpoints
+├── conversations.e2e-spec.ts # Chat endpoints
+└── jest-e2e.json           # E2E test configuration
 ```
 
 ## Deployment
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+### Build for Production
 
 ```bash
-pnpm install -g @nestjs/mau
-mau deploy
+# From monorepo root
+turbo build --filter=api
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Docker Deployment
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+
+# Copy monorepo files
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY apps/api ./apps/api
+COPY packages ./packages
+
+# Install dependencies
+RUN npm install -g pnpm && pnpm install --frozen-lockfile
+
+# Build the application
+RUN turbo build --filter=api
+
+# Start the application
+EXPOSE 3000
+CMD ["pnpm", "start", "--filter=api"]
+```
+
+### Environment-Specific Deployment
+
+Create environment-specific configuration files:
+
+- `.env.staging` - Staging environment variables
+- `.env.production` - Production environment variables
+
+## Performance & Monitoring
+
+### Logging
+
+The API uses structured logging with different levels:
+
+```typescript
+import { Logger } from '@nestjs/common';
+
+export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
+  async createUser(userData: CreateUserDto) {
+    this.logger.log('Creating new user', { email: userData.email });
+    // ... business logic
+    this.logger.log('User created successfully', { userId: newUser.id });
+  }
+}
+```
+
+### Health Checks
+
+- `GET /health` - Application health status
+- `GET /health/database` - Database connection status
+- `GET /health/redis` - Redis connection status
+
+### Metrics & Monitoring
+
+Consider integrating:
+
+- **APM**: DataDog, New Relic, or Sentry for application monitoring
+- **Metrics**: Prometheus + Grafana for custom metrics
+- **Logs**: ELK stack or similar for log aggregation
+
+## Security
+
+### Authentication Flow
+
+1. User provides credentials via `/auth/login`
+2. API validates credentials and returns JWT access token
+3. Client includes token in `Authorization: Bearer <token>` header
+4. API validates token on protected routes
+
+### Security Headers
+
+The API implements security headers via Helmet:
+
+```typescript
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable for API
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
+```
+
+### Rate Limiting
+
+```typescript
+import { ThrottlerModule } from '@nestjs/throttler';
+
+@Module({
+  imports: [
+    ThrottlerModule.forRoot({
+      ttl: 60, // 1 minute
+      limit: 100, // 100 requests per minute
+    }),
+  ],
+})
+```
+
+## Contributing
+
+1. Follow the [main project workflow](../../README.md#development-workflow)
+2. Ensure all tests pass: `pnpm --filter=api test`
+3. Run linting: `pnpm --filter=api lint`
+4. Update documentation for API changes
+5. Add/update tests for new features
 
 ## Resources
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in Touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- [NestJS Documentation](https://docs.nestjs.com)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs)
+- [Jest Testing Framework](https://jestjs.io/docs/getting-started)
+- [Class Validator](https://github.com/typestack/class-validator)
+- [Swagger/OpenAPI](https://swagger.io/specification/)
