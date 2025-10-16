@@ -302,7 +302,3 @@ import { ThrottlerModule } from '@nestjs/throttler';
 - [Jest Testing Framework](https://jestjs.io/docs/getting-started)
 - [Class Validator](https://github.com/typestack/class-validator)
 - [Swagger/OpenAPI](https://swagger.io/specification/)
-
-## License
-
-This project is part of VanX.Chat and is licensed under the [MIT License](../../LICENSE).
