@@ -1,4 +1,4 @@
-import { ArrowUpIcon, Plus, Search } from "lucide-react"
+import { ArrowUpIcon, Plus } from "lucide-react"
 
 import {
   DropdownMenu,
@@ -10,7 +10,6 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
-  InputGroupInput,
   InputGroupText,
   InputGroupTextarea,
 } from "@vanx/ui/components/input-group"

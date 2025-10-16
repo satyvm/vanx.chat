@@ -3,7 +3,7 @@ import { SearchIcon } from "lucide-react"
 import { Button } from "@vanx/ui/components/button"
 import { ButtonGroup } from "@vanx/ui/components/button-group"
 import { Input } from "@vanx/ui/components/input"
-import { SidebarGroup, SidebarGroupLabel } from "@vanx/ui/components/sidebar"
+import { SidebarGroup } from "@vanx/ui/components/sidebar"
 
 export function NavSearch() {
   return (

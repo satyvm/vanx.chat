@@ -12,6 +12,7 @@
     "check-types": "astro check"
   },
   "dependencies": {
+    "@vanx/ui": "workspace:*",
     "@astrojs/react": "^4.4.0",
     "@astrojs/sitemap": "^3.6.0",
     "@fontsource/geist-mono": "^5.2.6",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@vanx/eslint-config": "workspace:*",
     "@vanx/typescript-config": "workspace:*",
+    "eslint": "^9.34.0",
     "prettier": "^3.5.3",
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",

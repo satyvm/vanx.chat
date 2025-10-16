@@ -5,8 +5,6 @@ export default [
   ...config,
   {
     ignores: [
-      "apps/**",
-      "packages/**",
       "node_modules/**",
       "dist/**",
       ".next/**",
