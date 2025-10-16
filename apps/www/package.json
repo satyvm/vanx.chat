@@ -1,23 +1,23 @@
 {
   "name": "@vanx/www",
-  "type": "module",
   "version": "0.0.1",
   "description": "The world's most intelligent and collaborative AI interaction hub",
+  "type": "module",
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
     "astro": "astro",
+    "build": "astro build",
+    "check-types": "astro check",
+    "dev": "astro dev",
     "lint": "eslint \"src/**/*.{js,ts,astro}\" --fix",
-    "check-types": "astro check"
+    "preview": "astro preview"
   },
   "dependencies": {
-    "@vanx/ui": "workspace:*",
     "@astrojs/react": "^4.4.0",
     "@astrojs/sitemap": "^3.6.0",
     "@fontsource/geist-mono": "^5.2.6",
     "@fontsource/roboto": "^5.2.5",
     "@tailwindcss/vite": "^4.1.5",
+    "@vanx/ui": "workspace:*",
     "astro": "^5.14.5",
     "astro-robots-txt": "^1.0.0",
     "astro-seo": "^0.8.4",
