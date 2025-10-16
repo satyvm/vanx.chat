@@ -7,8 +7,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "eslint .",
+    "lint:fix": "eslint --fix .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -20,11 +20,14 @@
     "react-dom": "^19.1.1"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
     "@types/node": "^20.19.9",
     "@types/react": "^19.1.9",
     "@types/react-dom": "^19.1.7",
     "@vanx/eslint-config": "workspace:*",
     "@vanx/typescript-config": "workspace:*",
+    "eslint": "^9.37.0",
+    "eslint-config-next": "^15.5.5",
     "typescript": "^5.9.2"
   }
 }
