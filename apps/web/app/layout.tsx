@@ -2,7 +2,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import "@vanx/ui/globals.css";
 import { Providers } from "@/components/providers";
-import { ClerkProvider } from "@clerk/nextjs";
 
 const fontSans = Geist({
   subsets: ["latin"],
@@ -20,7 +19,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
           className={`${fontSans.variable} ${fontMono.variable} font-sans antialiased `}
@@ -28,6 +26,5 @@ export default function RootLayout({
           <Providers>{children}</Providers>
         </body>
       </html>
-    </ClerkProvider>
   );
 }
