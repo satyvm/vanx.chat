@@ -3,6 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "prepare": "husky",
     "build": "turbo run build",
     "check-types": "turbo run check-types",
     "dev": "turbo run dev",
