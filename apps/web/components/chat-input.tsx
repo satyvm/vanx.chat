@@ -18,7 +18,7 @@ import { Separator } from "@vanx/ui/components/separator"
 
 export function ChatInput() {
   return (
-    <div className="grid w-[60%] gap-6 mx-auto">
+    <div className="grid lg:w-[60%] md:w-full w-full gap-6 mx-auto">
       <InputGroup>
         <InputGroupTextarea placeholder="Ask, Learn or Chat..." />
         <InputGroupAddon align="block-end">

@@ -28,8 +28,8 @@ import {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "user@vanx.chat",
+    name: "root",
+    email: "root@vanx.chat",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -66,7 +66,6 @@ const data = {
       title: "Tags",
       url: "#",
       icon: Hash,
-      isActive: true,
       items: [
         {
           title: "Code",
