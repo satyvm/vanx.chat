@@ -14,10 +14,10 @@ importers:
       '@commitlint/config-conventional':
         specifier: ^19.8.1
         version: 19.8.1
-      '@workspace/eslint-config':
+      '@vanx/eslint-config':
         specifier: workspace:*
         version: link:packages/eslint-config
-      '@workspace/typescript-config':
+      '@vanx/typescript-config':
         specifier: workspace:*
         version: link:packages/typescript-config
       husky:
@@ -71,7 +71,7 @@ importers:
         version: 11.0.7(chokidar@4.0.3)(typescript@5.9.2)
       '@nestjs/testing':
         specifier: ^11.0.1
-        version: 11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.6)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6))
+        version: 11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(@nestjs/platform-express@11.1.6)
       '@types/express':
         specifier: ^5.0.0
         version: 5.0.3
@@ -84,10 +84,10 @@ importers:
       '@types/supertest':
         specifier: ^6.0.2
         version: 6.0.3
-      '@workspace/eslint-config':
+      '@vanx/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@workspace/typescript-config':
+      '@vanx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       eslint:
@@ -138,7 +138,7 @@ importers:
       '@clerk/nextjs':
         specifier: ^6.31.10
         version: 6.31.10(next@15.5.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
-      '@workspace/ui':
+      '@vanx/ui':
         specifier: workspace:*
         version: link:../../packages/ui
       lucide-react:
@@ -166,10 +166,10 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.7
         version: 19.1.9(@types/react@19.1.12)
-      '@workspace/eslint-config':
+      '@vanx/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@workspace/typescript-config':
+      '@vanx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       typescript:
@@ -215,10 +215,10 @@ importers:
         specifier: ^4.1.5
         version: 4.1.13
     devDependencies:
-      '@workspace/eslint-config':
+      '@vanx/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@workspace/typescript-config':
+      '@vanx/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       prettier:
@@ -320,10 +320,10 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.7
         version: 19.1.9(@types/react@19.1.12)
-      '@workspace/eslint-config':
+      '@vanx/eslint-config':
         specifier: workspace:*
         version: link:../eslint-config
-      '@workspace/typescript-config':
+      '@vanx/typescript-config':
         specifier: workspace:*
         version: link:../typescript-config
       tailwindcss:
@@ -4398,6 +4398,7 @@ packages:
 
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
+    hasBin: true
 
   lower-case-first@1.0.2:
     resolution: {integrity: sha512-UuxaYakO7XeONbKrZf5FEgkantPf5DUqDayzP5VXZrtRPdH86s4kN47I8B3TW10S4QKiE3ziHNf3kRN//okHjA==}
@@ -5319,6 +5320,7 @@ packages:
 
   resolve@2.0.0-next.5:
     resolution: {integrity: sha512-U7WjGVG9sH8tvjW5SmGbQuui75FiyjAX72HX15DwBBwF9dNiQZRQAg9nnPhYy+TUnE0+VcrttuvNI8oSxZcocA==}
+    hasBin: true
 
   restore-cursor@3.1.0:
     resolution: {integrity: sha512-l+sSefzHpj5qimhFSE5a8nufZYAM3sBSVMAPtYkmC+4EH2anSGaEMXSD0izRQbu9nfyQ9y5JrVmp7E8oZrUjvA==}
@@ -5421,6 +5423,7 @@ packages:
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
+    hasBin: true
 
   semver@7.6.2:
     resolution: {integrity: sha512-FNAIBWCx9qcRhoHcgcJ0gvU7SN1lYU2ZXuSfl04bSC5OpvDHFyJCjdNHomPXxjQlCBU67YW64PzY7/VIEH7F2w==}
@@ -5430,6 +5433,7 @@ packages:
   semver@7.7.2:
     resolution: {integrity: sha512-RF0Fw+rO5AMf9MAyaRXI4AV0Ulj5lMHqVxxdSgiVbixSCXoEmmX/jk0CuJw4+3SqroYO9VoUh+HcuJivvtJemA==}
     engines: {node: '>=10'}
+    hasBin: true
 
   send@1.2.0:
     resolution: {integrity: sha512-uaW0WwXKpL9blXE2o0bRhoL2EGXIrZxQ2ZQ4mgcfoBxdFmQold+qWsD2jLrfZ0trjKL6vOw0j//eAwcALFjKSw==}
@@ -6028,6 +6032,7 @@ packages:
   typescript@5.9.2:
     resolution: {integrity: sha512-CWBzXQrc/qOkhidw1OzBTQuYRbfyxDXJMVJ1XNwUHGROVmuaeiEm3OslpZ1RV96d7SKKjZKrSJu3+t/xlw3R9A==}
     engines: {node: '>=14.17'}
+    hasBin: true
 
   ufo@1.6.1:
     resolution: {integrity: sha512-9a4/uxlTWJ4+a5i0ooc1rU7C7YOw3wT+UGqdeNNHWnOF9qcMBgLRS+4IYUqbczewFx4mLEig6gawh7X6mFlEkA==}
@@ -6442,6 +6447,7 @@ packages:
   which@2.0.2:
     resolution: {integrity: sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA==}
     engines: {node: '>= 8'}
+    hasBin: true
 
   widest-line@5.0.0:
     resolution: {integrity: sha512-c9bZp7b5YtRj2wOe6dlj32MK+Bx/M/d+9VB2SHM1OtsUHR0aV0tdP6DWh/iMt0kWi1t5g1Iudu6hQRNd1A4PVA==}
@@ -7905,7 +7911,7 @@ snapshots:
     transitivePeerDependencies:
       - chokidar
 
-  '@nestjs/testing@11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.6)(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6))':
+  '@nestjs/testing@11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/core@11.1.6)(@nestjs/platform-express@11.1.6)':
     dependencies:
       '@nestjs/common': 11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2)
       '@nestjs/core': 11.1.6(@nestjs/common@11.1.6(reflect-metadata@0.2.2)(rxjs@7.8.2))(@nestjs/platform-express@11.1.6)(reflect-metadata@0.2.2)(rxjs@7.8.2)

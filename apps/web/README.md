@@ -9,7 +9,7 @@ This is the main web application for VanX.Chat, built with Next.js, React, and T
 ## Features
 
 - **Modern Stack**: Built with Next.js 15, React 19, and Tailwind CSS
-- **Component Library**: Uses shared UI components from `@workspace/ui` package
+- **Component Library**: Uses shared UI components from `@vanx/ui` package
 - **Type Safety**: 100% TypeScript with strict type checking
 - **Dark Mode**: Built-in dark mode support via `next-themes`
 - **Performance**: Fast development with Turbopack
@@ -19,7 +19,7 @@ This is the main web application for VanX.Chat, built with Next.js, React, and T
 - **Framework**: [Next.js](https://nextjs.org/) - React framework with App Router
 - **UI**: [React](https://react.dev/) - UI library
 - **Styling**: [Tailwind CSS](https://tailwindcss.com/) - Utility-first CSS
-- **Components**: Shared component library from `@workspace/ui`
+- **Components**: Shared component library from `@vanx/ui`
 - **Icons**: [Lucide React](https://lucide.dev/docs/lucide-react) - Beautiful icons
 - **Theming**: [next-themes](https://github.com/pacocoursey/next-themes) - Dark/light mode
 
@@ -131,7 +131,7 @@ NEXT_PUBLIC_HOTJAR_ID=
 Import components from the shared UI package:
 
 ```tsx
-import { Button } from "@workspace/ui/components/button"
+import { Button } from "@vanx/ui/components/button"
 
 export default function MyComponent() {
   return (

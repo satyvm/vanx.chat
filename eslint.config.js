@@ -1,4 +1,4 @@
-import { config } from "@workspace/eslint-config/base.js";
+import { config } from "@vanx/eslint-config/base.js";
 
 /** @type {import("eslint").Linter.Config[]} */
 export default [

@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/www",
+  "name": "@vanx/www",
   "type": "module",
   "version": "0.0.1",
   "description": "The world's most intelligent and collaborative AI interaction hub",
@@ -30,7 +30,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "sharp": "^0.34.1",
-    "@workspace/eslint-config": "workspace:*",
-    "@workspace/typescript-config": "workspace:*"
+    "@vanx/eslint-config": "workspace:*",
+    "@vanx/typescript-config": "workspace:*"
   }
 }
