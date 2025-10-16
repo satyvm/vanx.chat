@@ -11,6 +11,8 @@ import {
   Hash,
 } from "lucide-react"
 
+import { NavSearch } from "@/components/nav-search"
+import { NavChats } from "@/components/nav-chat"
 import { NavMain } from "@/components/nav-main"
 import { NavProjects } from "@/components/nav-projects"
 import { NavUser } from "@/components/nav-user"
@@ -40,6 +42,23 @@ const data = {
       name: "Evil Corp.",
       logo: Command,
       plan: "Free",
+    },
+  ],
+  chats: [
+    {
+      id: 1,
+      title: "Which is the best model for coding?",
+      url: "#",
+    },
+    {
+      id: 2,
+      title: "How to build a website?",
+      url: "#",
+    },
+    {
+      id: 3,
+      title: "How to build a mobile app?",
+      url: "#",
     },
   ],
   navMain: [
@@ -109,6 +128,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
+        <NavSearch />
+        <NavChats chats={data.chats} />
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
