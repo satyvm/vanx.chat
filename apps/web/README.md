@@ -89,6 +89,7 @@ apps/web/
 ### `app/layout.tsx`
 
 The root layout that wraps all pages, includes:
+
 - Font configuration (Geist Sans & Geist Mono)
 - Global styles import
 - Theme provider setup
@@ -96,12 +97,14 @@ The root layout that wraps all pages, includes:
 ### `app/page.tsx`
 
 The home page component, demonstrates:
+
 - Basic layout structure
 - Usage of shared UI components
 
 ### `components/providers.tsx`
 
 Theme provider setup using `next-themes`:
+
 - Dark/light mode switching
 - System preference detection
 - Transition control
@@ -109,6 +112,7 @@ Theme provider setup using `next-themes`:
 ### `next.config.mjs`
 
 Next.js configuration including:
+
 - Transpilation of workspace packages
 - Other Next.js settings
 
@@ -131,14 +135,14 @@ NEXT_PUBLIC_HOTJAR_ID=
 Import components from the shared UI package:
 
 ```tsx
-import { Button } from "@vanx/ui/components/button"
+import { Button } from "@vanx/ui/components/button";
 
 export default function MyComponent() {
   return (
     <div>
       <Button variant="default">Click me</Button>
     </div>
-  )
+  );
 }
 ```
 
@@ -169,6 +173,7 @@ vercel --prod
 #### Other Deployment Options
 
 The app can be deployed to any platform supporting Next.js:
+
 - AWS Amplify
 - Netlify
 - Google Cloud Run

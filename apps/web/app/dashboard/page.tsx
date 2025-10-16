@@ -1,5 +1,5 @@
-import { AppSidebar } from "@/components/app-sidebar"
-import { ChatInput } from "@/components/chat-input"
+import { AppSidebar } from "@/components/app-sidebar";
+import { ChatInput } from "@/components/chat-input";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,13 +7,13 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@vanx/ui/components/breadcrumb"
-import { Separator } from "@vanx/ui/components/separator"
+} from "@vanx/ui/components/breadcrumb";
+import { Separator } from "@vanx/ui/components/separator";
 import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@vanx/ui/components/sidebar"
+} from "@vanx/ui/components/sidebar";
 
 export default function Page() {
   return (
@@ -30,13 +30,13 @@ export default function Page() {
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
-                  <BreadcrumbLink href="#">
-                    Chats
-                  </BreadcrumbLink>
+                  <BreadcrumbLink href="#">Chats</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
                 <BreadcrumbItem>
-                  <BreadcrumbPage>Which is the best model for coding?</BreadcrumbPage>
+                  <BreadcrumbPage>
+                    Which is the best model for coding?
+                  </BreadcrumbPage>
                 </BreadcrumbItem>
               </BreadcrumbList>
             </Breadcrumb>
@@ -48,5 +48,5 @@ export default function Page() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

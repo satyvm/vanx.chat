@@ -1,16 +1,16 @@
-import { GalleryVerticalEnd } from "lucide-react"
+import { GalleryVerticalEnd } from "lucide-react";
 
-import { cn } from "@vanx/ui/lib/utils"
-import { Button } from "@vanx/ui/components/button"
+import { cn } from "@vanx/ui/lib/utils";
+import { Button } from "@vanx/ui/components/button";
 import {
   Field,
   FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldSeparator,
-} from "@vanx/ui/components/field"
-import { Input } from "@vanx/ui/components/input"
-import Link from "next/link"
+} from "@vanx/ui/components/field";
+import { Input } from "@vanx/ui/components/input";
+import Link from "next/link";
 
 export function SignupForm({
   className,
@@ -75,5 +75,5 @@ export function SignupForm({
         and <a href="#">Privacy Policy</a>.
       </FieldDescription>
     </div>
-  )
+  );
 }

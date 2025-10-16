@@ -1,0 +1,4 @@
+apps/www/**/*.astro
+*.md
+README.md
+**/README.md

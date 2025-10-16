@@ -1,19 +1,19 @@
-import { ArrowUpIcon, Plus } from "lucide-react"
+import { ArrowUpIcon, Plus } from "lucide-react";
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@vanx/ui/components/dropdown-menu"
+} from "@vanx/ui/components/dropdown-menu";
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupText,
   InputGroupTextarea,
-} from "@vanx/ui/components/input-group"
-import { Separator } from "@vanx/ui/components/separator"
+} from "@vanx/ui/components/input-group";
+import { Separator } from "@vanx/ui/components/separator";
 
 export function ChatInput() {
   return (
@@ -56,5 +56,5 @@ export function ChatInput() {
         </InputGroupAddon>
       </InputGroup>
     </div>
-  )
+  );
 }
