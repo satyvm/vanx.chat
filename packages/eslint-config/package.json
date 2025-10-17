@@ -1,13 +1,13 @@
 {
   "name": "@vanx/eslint-config",
   "version": "0.0.0",
-  "type": "module",
   "private": true,
+  "type": "module",
   "exports": {
     "./base.js": "./base.js",
-    "./next-js": "./next.js",
-    "./astro": "./astro.js",
-    "./react-internal": "./react-internal.js"
+    "./next.js": "./next.js",
+    "./astro.js": "./astro.js",
+    "./react-internal.js": "./react-internal.js"
   },
   "devDependencies": {
     "@eslint/js": "^9.34.0",

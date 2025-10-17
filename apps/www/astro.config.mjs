@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-ignore
 import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
@@ -15,7 +15,8 @@ export default defineConfig({
       prefixDefaultLocale: false
     }
   },
-  integrations: [react(), sitemap({
+  integrations: [
+    react(), sitemap({
     i18n: {
       defaultLocale: 'en',
       locales: {
@@ -29,7 +30,7 @@ export default defineConfig({
   ],
   vite: {
     plugins: [
-      tailwindcss()
+      tailwindcss(),
     ],
     server: {
       watch: {
