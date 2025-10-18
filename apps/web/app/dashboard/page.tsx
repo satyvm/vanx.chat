@@ -1,5 +1,6 @@
 import { AppSidebar } from "@/components/app-sidebar";
 import { ChatInput } from "@/components/chat-input";
+import { CommandK } from "@/components/command-k";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -45,6 +46,7 @@ export default function Page() {
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
           <div className="bg-muted/50 flex-1 rounded-xl" />
           <ChatInput />
+          <CommandK />
         </div>
       </SidebarInset>
     </SidebarProvider>

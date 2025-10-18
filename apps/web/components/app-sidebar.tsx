@@ -9,6 +9,7 @@ import {
   Map,
   PieChart,
   Hash,
+  MessageCircle,
 } from "lucide-react";
 
 import { NavSearch } from "@/components/nav-search";
@@ -46,19 +47,26 @@ const data = {
   ],
   chats: [
     {
-      id: 1,
-      title: "Which is the best model for coding?",
+      title: "Chats",
+      icon: MessageCircle,
       url: "#",
-    },
-    {
-      id: 2,
-      title: "How to build a website?",
-      url: "#",
-    },
-    {
-      id: 3,
-      title: "How to build a mobile app?",
-      url: "#",
+      items: [
+        {
+          id: 1,
+          title: "Which is the best model for coding?",
+          url: "#",
+        },
+        {
+          id: 2,
+          title: "How to build a website?",
+          url: "#",
+        },
+        {
+          id: 3,
+          title: "How to build a mobile app?",
+          url: "#",
+        },
+      ],
     },
   ],
   navMain: [
@@ -128,9 +136,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavSearch />
-        <NavChats chats={data.chats} />
-        <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
+        <NavChats chats={data.chats} />
+        {/* <NavMain items={data.navMain} /> */}
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

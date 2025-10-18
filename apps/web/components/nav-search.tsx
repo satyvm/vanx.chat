@@ -1,19 +1,42 @@
 import { SearchIcon } from "lucide-react";
 
-import { Button } from "@vanx/ui/components/button";
-import { ButtonGroup } from "@vanx/ui/components/button-group";
-import { Input } from "@vanx/ui/components/input";
-import { SidebarGroup } from "@vanx/ui/components/sidebar";
+import {
+  SidebarGroup,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
+} from "@vanx/ui/components/sidebar";
+import {
+  InputGroup,
+  InputGroupInput,
+  InputGroupAddon,
+} from "@vanx/ui/components/input-group";
+import { Collapsible } from "@vanx/ui/components/collapsible";
 
 export function NavSearch() {
+  const { state } = useSidebar();
+  const isCollapsed = state === "collapsed";
+
   return (
-    <SidebarGroup>
-      <ButtonGroup>
-        <Input placeholder="Search..." />
-        <Button variant="outline" aria-label="Search">
-          <SearchIcon />
-        </Button>
-      </ButtonGroup>
+    <SidebarGroup className={isCollapsed ? "pb-0" : ""}>
+      {isCollapsed ? (
+        <SidebarMenu>
+          <SidebarMenuButton asChild>
+            <SearchIcon />
+          </SidebarMenuButton>
+        </SidebarMenu>
+      ) : (
+        <SidebarMenu>
+          <InputGroup>
+            <InputGroupInput placeholder="Search..." />
+            <InputGroupAddon>
+              <SearchIcon />
+            </InputGroupAddon>
+          </InputGroup>
+        </SidebarMenu>
+      )}
     </SidebarGroup>
   );
 }
