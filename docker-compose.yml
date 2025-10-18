@@ -1,0 +1,14 @@
+services:
+  vanx-postgres:
+    image: postgres:17.6
+    restart: always
+    environment:
+      - POSTGRES_USER=devuser
+      - POSTGRES_PASSWORD=3ZQcGr8GbywLNxumLOZqUh1NDL5kBp
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres:

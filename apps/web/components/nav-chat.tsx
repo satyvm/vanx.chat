@@ -6,8 +6,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
   SidebarMenuSubButton,
   useSidebar,
 } from "@vanx/ui/components/sidebar";

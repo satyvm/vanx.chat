@@ -2,10 +2,8 @@ import { SearchIcon } from "lucide-react";
 
 import {
   SidebarGroup,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
   useSidebar,
 } from "@vanx/ui/components/sidebar";
 import {
