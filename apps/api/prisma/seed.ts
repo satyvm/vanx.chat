@@ -1,4 +1,4 @@
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
@@ -18,7 +18,8 @@ async function main(): Promise<void> {
       update: {},
       create: {
         email: 'admin@example.com',
-        name: 'Admin User',
+        firstName: 'Admin',
+        lastName: 'User',
         password: await hashPassword('admin123'),
       },
     }),
@@ -27,7 +28,8 @@ async function main(): Promise<void> {
       update: {},
       create: {
         email: 'john.doe@example.com',
-        name: 'John Doe',
+        firstName: 'John',
+        lastName:'Doe',
         password: await hashPassword('password123'),
       },
     }),
@@ -36,7 +38,8 @@ async function main(): Promise<void> {
       update: {},
       create: {
         email: 'jane.smith@example.com',
-        name: 'Jane Smith',
+        firstName: 'Jane',
+        lastName:'Smith',
         password: await hashPassword('password123'),
       },
     }),
@@ -45,7 +48,8 @@ async function main(): Promise<void> {
       update: {},
       create: {
         email: 'bob.wilson@example.com',
-        name: 'Bob Wilson',
+        firstName: 'Bob',
+        lastName:'Wilson',
         password: await hashPassword('password123'),
       },
     }),
