@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-ignore
 import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
@@ -6,27 +6,32 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from "@astrojs/sitemap";
 import robotsTxt from 'astro-robots-txt';
 
-// https://astro.build/config
 export default defineConfig({
   site: 'https://vanx.chat/',
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'es'],
+    locales: ['en', 'es', 'ko'],  // Add 'ko' here
     routing: {
       prefixDefaultLocale: false
     }
   },
-  integrations: [react(), sitemap({
+  integrations: [
+    react(), sitemap({
     i18n: {
       defaultLocale: 'en',
       locales: {
         en: 'en-US',
-        es: 'es-ES'
+        es: 'es-ES',
+        ko: 'ko-KR'  // Add Korean
       }
     }
-  }), robotsTxt()],
+  }),
+  robotsTxt()
+  ],
   vite: {
-    plugins: [tailwindcss()],
+    plugins: [
+      tailwindcss(),
+    ],
     server: {
       watch: {
         usePolling: true

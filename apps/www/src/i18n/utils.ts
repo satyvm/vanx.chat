@@ -12,17 +12,18 @@ export function useTranslations(lang: keyof typeof ui) {
 	}
 }
 
-// Obtiene un valor anidado de un objeto usando una ruta como 'home.content.1.title'
-function getNestedValue(obj: any, path: string) {
-	return path.split('.').reduce((prev, curr) => {
-		return prev ? prev[curr] : null
+function getNestedValue(obj: Record<string, unknown>, path: string): unknown {
+	return path.split('.').reduce<unknown>((prev, curr) => {
+		if (prev && typeof prev === 'object' && curr in prev) {
+			return (prev as Record<string, unknown>)[curr]
+		}
+		return null
 	}, obj)
 }
 
 export function getTranslatedPath(path: string, lang: string) {
 	const pathWithoutLeadingSlash = path.startsWith('/') ? path.slice(1) : path
 
-	// Si estamos en la ruta raíz
 	if (pathWithoutLeadingSlash === '') {
 		if (lang === defaultLang) return '/'
 		return `/${lang}/`

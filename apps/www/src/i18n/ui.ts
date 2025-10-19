@@ -2,9 +2,9 @@ export const languages = {
 	en: 'English',
 	es: 'Español',
 	ko: '한국어'
-};
+}
 
-export const defaultLang = 'en';
+export const defaultLang = 'en'
 
 export const ui = {
 	en: {
@@ -14,8 +14,7 @@ export const ui = {
 			description: "The world's most intelligent and collaborative AI interaction hub",
 			hero: {
 				headline: 'vanx.chat',
-				subheadline:
-					'Stop juggling AI tools.'
+				subheadline: 'Stop juggling AI tools.'
 			},
 			content: {
 				'1': {
@@ -62,8 +61,7 @@ export const ui = {
 			description: 'El hub de interacción con IA más inteligente y colaborativo del mundo',
 			hero: {
 				headline: 'VANX.CHAT',
-				subheadline:
-					'Deja de hacer malabares con herramientas de IA.'
+				subheadline: 'Deja de hacer malabares con herramientas de IA.'
 			},
 			content: {
 				'1': {
@@ -110,8 +108,7 @@ export const ui = {
 			description: '세계에서 가장 지능적이고 협업적인 AI 상호작용 허브',
 			hero: {
 				headline: 'VANX.CHAT',
-				subheadline:
-					'AI 도구들을 전전하는 것을 그만하세요.'
+				subheadline: 'AI 도구들을 전전하는 것을 그만하세요.'
 			},
 			content: {
 				'1': {
@@ -151,4 +148,4 @@ export const ui = {
 			back: '홈으로 돌아가기'
 		}
 	}
-};
+}
