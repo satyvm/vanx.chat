@@ -1,4 +1,4 @@
-# @workspace/eslint-config
+# @vanx/eslint-config
 
 > Shared ESLint configurations for the VanX.Chat monorepo
 
@@ -38,7 +38,7 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["@workspace/eslint-config/next.js"],
+  extends: ["@vanx/eslint-config/next.js"],
   parserOptions: {
     project,
   },
@@ -62,7 +62,7 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["@workspace/eslint-config/base.js"],
+  extends: ["@vanx/eslint-config/base.js"],
   parserOptions: {
     project,
   },
@@ -93,7 +93,7 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["@workspace/eslint-config/base.js"],
+  extends: ["@vanx/eslint-config/base.js"],
   parserOptions: {
     project,
   },
@@ -125,7 +125,7 @@ const project = resolve(process.cwd(), "tsconfig.json");
 
 /** @type {import("eslint").Linter.Config} */
 module.exports = {
-  extends: ["@workspace/eslint-config/react-internal.js"],
+  extends: ["@vanx/eslint-config/react-internal.js"],
   parserOptions: {
     project,
   },
@@ -296,7 +296,7 @@ Add to workspace settings (`.vscode/settings.json`):
 
 #### "Unable to resolve path to module"
 - Ensure `tsconfig.json` paths are correctly configured
-- Check that `@workspace/*` packages are properly linked with pnpm
+- Check that `@vanx/*` packages are properly linked with pnpm
 
 #### "Parsing error: Cannot read file"
 - Verify TypeScript configuration in `parserOptions.project`

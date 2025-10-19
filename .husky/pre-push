@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔨 Building all projects before push..."
+pnpm build
+
+echo "🔍 Running type checks..."
+pnpm check-types
+
+echo "✅ All checks passed! Pushing..."
