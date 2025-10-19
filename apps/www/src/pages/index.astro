@@ -1,14 +1,16 @@
 ---
+import { Image } from 'astro:assets'
 import Layout from '@/layouts/Layout.astro'
 import { getLangFromUrl, useTranslations } from '@/i18n/utils'
 import LanguageSelector from '@/components/LanguageSelector.astro'
+import logo from '@/assets/logo.svg'
 import { Brain, Users, Zap, Workflow } from 'lucide-react'
 
 const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<Layout title={t('home.title') as string} description={t('home.description') as string}>
+<Layout title={t('home.title')} description={t('home.description')}>
 	<main>
 		<section class="container mt-20 flex flex-col gap-6 px-6 py-8">
 			<div class="flex flex-col gap-2">

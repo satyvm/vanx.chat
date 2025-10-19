@@ -6,7 +6,7 @@ const lang = getLangFromUrl(Astro.url)
 const t = useTranslations(lang)
 ---
 
-<Layout title={t('404.title') as string} description={t('404.description') as string}>
+<Layout title={t('404.title')} description={t('404.description')}>
 	<main>
 		<section class="flex lg:min-h-[92svh]">
 			<div class="container flex flex-col items-center justify-center gap-6 py-20 md:py-40">

@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  transpilePackages: ["@vanx/ui"],
+  transpilePackages: ["@workspace/ui"],
 }
 
 export default nextConfig

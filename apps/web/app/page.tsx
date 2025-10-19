@@ -1,4 +1,4 @@
-import { Button } from "@vanx/ui/components/button";
+import { Button } from "@workspace/ui/components/button"
 
 export default function Page() {
   return (
@@ -8,6 +8,5 @@ export default function Page() {
         <Button size="sm">Button</Button>
       </div>
     </div>
-  );
+  )
 }
-// test

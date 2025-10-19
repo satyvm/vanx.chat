@@ -27,11 +27,6 @@ export const config = [
     },
   },
   {
-    ignores: [
-      "dist/**",
-      ".next/**",
-      ".astro/**",
-      "node_modules/**",
-    ],
+    ignores: ["dist/**"],
   },
 ];

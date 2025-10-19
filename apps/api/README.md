@@ -16,9 +16,9 @@ The VanX.Chat API is built with NestJS and provides the backend services for the
 
 - **Framework**: [NestJS](https://nestjs.com/) - Progressive Node.js framework
 - **Language**: TypeScript with strict mode
-- **Database**: _TBD_ - Likely PostgreSQL for primary data
-- **Cache**: _TBD_ - Likely Redis for session management
-- **Auth**: _TBD_ - JWT-based authentication
+- **Database**: *TBD* - Likely PostgreSQL for primary data
+- **Cache**: *TBD* - Likely Redis for session management
+- **Auth**: *TBD* - JWT-based authentication
 - **Validation**: Class-validator for request validation
 - **Testing**: Jest for unit and integration tests
 
@@ -117,20 +117,17 @@ apps/api/src/
 ## API Endpoints
 
 ### Authentication
-
 - `POST /auth/login` - User login
 - `POST /auth/register` - User registration
 - `POST /auth/refresh` - Refresh access token
 - `POST /auth/logout` - User logout
 
 ### Users
-
 - `GET /users/profile` - Get user profile
 - `PUT /users/profile` - Update user profile
 - `GET /users/usage` - Get usage statistics
 
 ### Conversations
-
 - `GET /conversations` - List user conversations
 - `POST /conversations` - Create new conversation
 - `GET /conversations/:id` - Get conversation details
@@ -138,13 +135,11 @@ apps/api/src/
 - `DELETE /conversations/:id` - Delete conversation
 
 ### AI Models
-
 - `GET /ai-models` - List available AI models
 - `POST /ai-models/chat` - Send chat message to AI
 - `GET /ai-models/usage` - Get model usage statistics
 
 ### Workspaces (Team Features)
-
 - `GET /workspaces` - List user workspaces
 - `POST /workspaces` - Create workspace
 - `GET /workspaces/:id` - Get workspace details
@@ -271,12 +266,10 @@ Consider integrating:
 The API implements security headers via Helmet:
 
 ```typescript
-app.use(
-  helmet({
-    contentSecurityPolicy: false, // Disable for API
-    crossOriginResourcePolicy: { policy: 'cross-origin' },
-  }),
-);
+app.use(helmet({
+  contentSecurityPolicy: false, // Disable for API
+  crossOriginResourcePolicy: { policy: 'cross-origin' }
+}));
 ```
 
 ### Rate Limiting
