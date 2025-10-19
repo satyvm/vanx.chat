@@ -6,13 +6,15 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-}// prisma/schema.prisma
+}
 
+// prisma/schema.prisma
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
@@ -22,6 +24,7 @@ model User {
   refreshToken String? 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
 
 // model User {
 //   id        Int       @id @default(autoincrement())
