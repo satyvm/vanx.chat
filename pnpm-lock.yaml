@@ -101,6 +101,9 @@ importers:
       "@vanx/typescript-config":
         specifier: workspace:*
         version: link:../../packages/typescript-config
+      bcryptjs:
+        specifier: ^3.0.2
+        version: 3.0.2
       eslint:
         specifier: ^9.18.0
         version: 9.37.0(jiti@2.6.1)
@@ -4500,6 +4503,13 @@ packages:
         integrity: sha512-4Bcg1P8xhUuqcii/S0Z9wiHIrQVPMermM1any+MX5GeGD7faD3/msQUDGLol9wOcz4/jbg/WJnGqoJF6LiBdtg==,
       }
     engines: { node: ">=10.0.0" }
+
+  bcryptjs@3.0.2:
+    resolution:
+      {
+        integrity: sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==,
+      }
+    hasBin: true
 
   binary-extensions@2.3.0:
     resolution:
@@ -14681,6 +14691,8 @@ snapshots:
   baseline-browser-mapping@2.8.16: {}
 
   basic-ftp@5.0.5: {}
+
+  bcryptjs@3.0.2: {}
 
   binary-extensions@2.3.0: {}
 
