@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script to start development environment with tmux
+# Script to start development environment with tmux (2x2 grid layout)
 # Usage: ./dev.sh
 
 # Check if tmux is installed
@@ -20,34 +20,49 @@ fi
 # Kill any existing tmux session with the same name
 tmux kill-session -t vanx-dev 2>/dev/null || true
 
-# Create new tmux session with two panes
+# Create new tmux session
 tmux new-session -d -s vanx-dev -n "dev"
+tmux set-option -t vanx-dev -g default-terminal "screen-256color"
 
-# Split the window horizontally
+# Split horizontally first (left and right panes on top)
 tmux split-window -h -t vanx-dev:0
 
-# Configure pane 0 (left) - API development
-tmux send-keys -t vanx-dev:0.0 "echo '🚀 Starting NestJS development server...'" Enter
-tmux send-keys -t vanx-dev:0.0 "pnpm dev" Enter
+# Split top-left pane vertically
+tmux split-window -v -t vanx-dev:0.0
 
-# Configure pane 1 (right) - Prisma Studio
-tmux send-keys -t vanx-dev:0.1 "echo '🗄️  Starting Prisma Studio...'" Enter
-tmux send-keys -t vanx-dev:0.1 "pnpm prisma studio" Enter
+# Split top-right pane vertically
+tmux split-window -v -t vanx-dev:0.1
+
+# Configure pane 0 (top-left) - API development
+tmux send-keys -t vanx-dev:0.0 'echo "🚀 Starting NestJS development server..."' C-m
+tmux send-keys -t vanx-dev:0.0 'pnpm dev' C-m
+
+# Configure pane 1 (top-right) - Prisma Studio
+tmux send-keys -t vanx-dev:0.1 'echo "🗄️  Starting Prisma Studio..."' C-m
+tmux send-keys -t vanx-dev:0.1 'pnpm prisma studio' C-m
+
+# Configure pane 2 (bottom-left) - Docker Compose
+tmux send-keys -t vanx-dev:0.2 'echo "🔗 Starting Docker Compose..."' C-m
+tmux send-keys -t vanx-dev:0.2 'TERM=xterm-256color && cd ../..' C-m
+tmux send-keys -t vanx-dev:0.2 'docker-compose up' C-m
+
+# Configure pane 3 (bottom-right) - Logs/Debug
+tmux send-keys -t vanx-dev:0.3 'cat << "EOF"
+📝 Keyboard Shortcuts:
+   - Ctrl+b h/j/k/l: Move between panes (vim keys)
+   - Ctrl+b Space: Cycle through layouts
+   - Ctrl+b z: Zoom current pane
+   - Ctrl+b d: Detach from session
+   - Ctrl+b x: Kill current pane
+   - tmux attach -t vanx-dev: Reattach to session
+EOF' C-m
 
 # Set pane titles
 tmux select-pane -t vanx-dev:0.0 -T "API Dev Server"
 tmux select-pane -t vanx-dev:0.1 -T "Prisma Studio"
+tmux select-pane -t vanx-dev:0.2 -T "Docker Compose"
+tmux select-pane -t vanx-dev:0.3 -T "Logs/Debug"
 
-# Attach to the session
-echo "🎉 Development environment started!"
-echo "📝 Commands:"
-echo "   - Ctrl+b d: Detach from session"
-echo "   - Ctrl+b x: Kill current pane"
-echo "   - Ctrl+b c: Create new window"
-echo "   - tmux attach -t vanx-dev: Reattach to session"
-echo ""
-echo "🔗 Prisma Studio will be available at: http://localhost:5555"
-echo "🔗 API will be available at: http://localhost:3000"
-echo ""
-
+# Balance panes equally
+tmux select-layout -t vanx-dev:0 tiled
 tmux attach -t vanx-dev

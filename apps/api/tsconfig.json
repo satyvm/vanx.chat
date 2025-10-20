@@ -2,6 +2,9 @@
   "extends": "@vanx/typescript-config/nestjs.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "@prisma/client": ["./generated/prisma"]
+    }
   }
 }
