@@ -1,116 +1,70 @@
-import { PrismaClient } from '../generated/prisma';
-import * as bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
-// Initialize Prisma Client
 const prisma = new PrismaClient();
 
-/**
- * Seeds the database with initial data
- */
-async function seedDatabase(): Promise<void> {
-  console.log('🌱 Starting database seeding...');
+async function main() {
+  // Clean existing data
+  await prisma.chat.deleteMany();
+  await prisma.user.deleteMany();
 
-  try {
-    // Hash password helper with proper error handling
-    const hashPassword = async (password: string): Promise<string> => {
-      try {
-        return await bcrypt.hash(password, 12); // Increased salt rounds for better security
-      } catch (error) {
-        console.error('❌ Error hashing password:', error);
-        throw new Error('Failed to hash password');
-      }
-    };
+  // Hash passwords
+  const hashedPassword = await bcrypt.hash('password123', 10);
 
-    // Define seed data
-    const seedUsers = [
-      {
-        email: 'admin@example.com',
-        firstName: 'Admin',
-        lastName: 'User',
-        password: 'admin123',
-        role: 'admin',
-      },
-      {
-        email: 'john.doe@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        password: 'password123',
-        role: 'user',
-      },
-      {
-        email: 'jane.smith@example.com',
-        firstName: 'Jane',
-        lastName: 'Smith',
-        password: 'password123',
-        role: 'user',
-      },
-    ];
+  // Create users
+  const user1 = await prisma.user.create({
+    data: {
+      email: 'sam@example.com',
+      firstName: 'Sam',
+      lastName: 'Developer',
+      password: hashedPassword,
+    },
+  });
 
-    // Create users with proper error handling
-    console.log('👥 Creating users...');
-    const createdUsers: Array<{
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      password: string;
-      refreshToken: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    }> = [];
+  const user2 = await prisma.user.create({
+    data: {
+      email: 'jane@example.com',
+      firstName: 'Jane',
+      lastName: 'Engineer',
+      password: hashedPassword,
+    },
+  });
 
-    for (const userData of seedUsers) {
-      try {
-        const hashedPassword = await hashPassword(userData.password);
+  console.log('✓ Created users:', { user1, user2 });
 
-        const user = await prisma.user.upsert({
-          where: { email: userData.email },
-          update: {
-            // Only update if password is different (for re-seeding)
-            password: hashedPassword,
-            updatedAt: new Date(),
-          },
-          create: {
-            email: userData.email,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            password: hashedPassword,
-          },
-        });
+  // Create chats
+  const chat1 = await prisma.chat.create({
+    data: {
+      title: 'Getting Started with Prisma',
+      description: 'Learn the basics of Prisma ORM',
+      body: 'Prisma is a next-generation ORM that provides a clean and type-safe API for working with databases...',
+    },
+  });
 
-        createdUsers.push(user);
-        console.log(`✅ User created/updated: ${user.email}`);
-      } catch (error) {
-        console.error(`❌ Failed to create user ${userData.email}:`, error);
-        throw error;
-      }
-    }
+  const chat2 = await prisma.chat.create({
+    data: {
+      title: 'DevOps Best Practices',
+      description: 'CI/CD pipelines and deployment strategies',
+      body: 'Implementing robust CI/CD pipelines is crucial for modern software development...',
+    },
+  });
 
-    console.log(`🎉 Successfully seeded ${createdUsers.length} users`);
+  const chat3 = await prisma.chat.create({
+    data: {
+      title: 'Crypto Analysis',
+      description: 'Understanding market trends',
+      body: 'Technical analysis involves studying price action and volume patterns...',
+    },
+  });
 
-    // Add any additional seed data here
-    // Example: Create sample chats, categories, etc.
-  } catch (error) {
-    console.error('💥 Seeding failed:', error);
-    throw error;
-  }
+  console.log('✓ Created chats:', { chat1, chat2, chat3 });
 }
 
-/**
- * Main execution function with proper cleanup
- */
-async function main(): Promise<void> {
-  try {
-    await seedDatabase();
-    console.log('✅ Database seeding completed successfully!');
-  } catch (error) {
-    console.error('💥 Seeding process failed:', error);
+main()
+  .catch((e) => {
+    console.error(e);
     process.exit(1);
-  } finally {
-    console.log('🔌 Disconnecting from database...');
+  })
+  .finally(async () => {
     await prisma.$disconnect();
-  }
-}
-
-// Execute the main function
-main();
+  });
