@@ -6,13 +6,14 @@
   "license": "UNLICENSED",
   "author": "",
   "scripts": {
+    "prebuild": "prisma generate",
     "build": "nest build",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:migrate:deploy": "prisma migrate deploy",
     "db:migrate:reset": "prisma migrate reset",
     "db:push": "prisma db push",
-    "db:seed": "ts-node prisma/seed.ts",
+    "db:seed": "tsx prisma/seed.ts",
     "db:seed:reset": "prisma migrate reset --force",
     "db:studio": "prisma studio",
     "dev": "nest start --watch --b swc",
@@ -20,10 +21,10 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "start": "nest start --b swc",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node dist/src/main",
     "test": "jest",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:debug": "node --inspect-brk -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:watch": "jest --watch"
   },
@@ -51,6 +52,8 @@
     "@nestjs/swagger": "^11.2.1",
     "@prisma/client": "6.17.1",
     "bcrypt": "^6.0.0",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.2",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",
     "swagger-ui-express": "^5.0.1"
@@ -80,7 +83,7 @@
     "ts-jest": "^29.2.5",
     "ts-loader": "^9.5.2",
     "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.20.6",
     "typescript": "^5.7.3",
     "typescript-eslint": "^8.20.0"
   }

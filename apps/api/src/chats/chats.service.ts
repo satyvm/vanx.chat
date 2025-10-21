@@ -7,26 +7,26 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class ChatsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createChatDto: CreateChatDto) {
+  async create(createChatDto: CreateChatDto) {
     return this.prisma.chat.create({ data: createChatDto });
   }
 
-  findAll() {
+  async findAll() {
     return this.prisma.chat.findMany();
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return this.prisma.chat.findUnique({ where: { id } });
   }
 
-  update(id: number, updateChatDto: UpdateChatDto) {
+  async update(id: number, updateChatDto: UpdateChatDto) {
     return this.prisma.chat.update({
       where: { id },
       data: updateChatDto,
     });
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return this.prisma.chat.delete({ where: { id } });
   }
 }

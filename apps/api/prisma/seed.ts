@@ -4,65 +4,64 @@ import bcrypt from 'bcrypt';
 const prisma = new PrismaClient();
 
 async function main() {
-  // Clean existing data
+  console.log('🌱 Seeding database...');
+
+  // Clear existing data
   await prisma.chat.deleteMany();
   await prisma.user.deleteMany();
 
-  // Hash passwords
+  // Create users
   const hashedPassword = await bcrypt.hash('password123', 10);
 
-  // Create users
   const user1 = await prisma.user.create({
     data: {
-      email: 'sam@example.com',
-      firstName: 'Sam',
-      lastName: 'Developer',
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
       password: hashedPassword,
     },
   });
 
   const user2 = await prisma.user.create({
     data: {
-      email: 'jane@example.com',
-      firstName: 'Jane',
-      lastName: 'Engineer',
+      name: 'Bob Smith',
+      email: 'bob@example.com',
       password: hashedPassword,
     },
   });
 
-  console.log('✓ Created users:', { user1, user2 });
-
   // Create chats
-  const chat1 = await prisma.chat.create({
+  await prisma.chat.create({
     data: {
-      title: 'Getting Started with Prisma',
-      description: 'Learn the basics of Prisma ORM',
-      body: 'Prisma is a next-generation ORM that provides a clean and type-safe API for working with databases...',
+      title: 'First Chat',
+      description: 'My first chat message',
+      body: 'Hello, this is the first chat!',
+      userId: user1.id,
     },
   });
 
-  const chat2 = await prisma.chat.create({
+  await prisma.chat.create({
     data: {
-      title: 'DevOps Best Practices',
-      description: 'CI/CD pipelines and deployment strategies',
-      body: 'Implementing robust CI/CD pipelines is crucial for modern software development...',
+      title: 'AI Discussion',
+      description: 'Discussing AI and ML',
+      body: "Let's talk about artificial intelligence and machine learning.",
+      userId: user1.id,
     },
   });
 
-  const chat3 = await prisma.chat.create({
+  await prisma.chat.create({
     data: {
-      title: 'Crypto Analysis',
-      description: 'Understanding market trends',
-      body: 'Technical analysis involves studying price action and volume patterns...',
+      title: 'DevOps Chat',
+      body: 'Setting up CI/CD pipelines and monitoring.',
+      userId: user2.id,
     },
   });
 
-  console.log('✓ Created chats:', { chat1, chat2, chat3 });
+  console.log('✅ Seeding completed successfully!');
 }
 
 main()
   .catch((e) => {
-    console.error(e);
+    console.error('❌ Seeding failed:', e);
     process.exit(1);
   })
   .finally(async () => {

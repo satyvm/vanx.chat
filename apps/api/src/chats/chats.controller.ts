@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  NotFoundException,
 } from '@nestjs/common';
 import { ChatsService } from './chats.service';
 import { CreateChatDto } from './dto/create-chat.dto';
@@ -20,31 +21,40 @@ export class ChatsController {
 
   @Post()
   @ApiCreatedResponse({ type: ChatEntity })
-  create(@Body() createChatDto: CreateChatDto) {
-    return this.chatsService.create(createChatDto);
+  async create(@Body() createChatDto: CreateChatDto) {
+    return new ChatEntity(await this.chatsService.create(createChatDto));
   }
 
   @Get()
   @ApiOkResponse({ type: ChatEntity, isArray: true })
-  findAll() {
-    return this.chatsService.findAll();
+  async findAll() {
+    const chats = await this.chatsService.findAll();
+    return chats.map((chat) => new ChatEntity(chat));
   }
 
   @Get(':id')
   @ApiOkResponse({ type: ChatEntity })
-  findOne(@Param('id') id: string) {
-    return this.chatsService.findOne(+id);
+  async findOne(@Param('id') id: string) {
+    const chat = await this.chatsService.findOne(+id);
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+    return new ChatEntity(chat);
   }
 
   @Patch(':id')
   @ApiOkResponse({ type: ChatEntity })
-  update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
-    return this.chatsService.update(+id, updateChatDto);
+  async update(@Param('id') id: string, @Body() updateChatDto: UpdateChatDto) {
+    return new ChatEntity(await this.chatsService.update(+id, updateChatDto));
   }
 
   @Delete(':id')
   @ApiOkResponse({ type: ChatEntity })
-  remove(@Param('id') id: string) {
-    return this.chatsService.remove(+id);
+  async remove(@Param('id') id: string) {
+    const chat = await this.chatsService.remove(+id);
+    if (!chat) {
+      throw new NotFoundException('Chat not found');
+    }
+    return new ChatEntity(chat);
   }
 }
