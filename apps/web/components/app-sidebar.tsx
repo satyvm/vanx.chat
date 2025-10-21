@@ -14,7 +14,6 @@ import {
 
 import { NavSearch } from "@/components/nav-search";
 import { NavChats } from "@/components/nav-chat";
-import { NavMain } from "@/components/nav-main";
 import { NavProjects } from "@/components/nav-projects";
 import { NavUser } from "@/components/nav-user";
 import { TeamSwitcher } from "@/components/team-switcher";

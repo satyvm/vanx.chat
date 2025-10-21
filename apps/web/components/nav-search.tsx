@@ -11,7 +11,6 @@ import {
   InputGroupInput,
   InputGroupAddon,
 } from "@vanx/ui/components/input-group";
-import { Collapsible } from "@vanx/ui/components/collapsible";
 
 export function NavSearch() {
   const { state } = useSidebar();
