@@ -6,6 +6,7 @@
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
+    "clean": "rm -rf .next",
     "dev": "next dev --turbopack",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
