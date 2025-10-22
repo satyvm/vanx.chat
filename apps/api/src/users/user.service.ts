@@ -1,6 +1,6 @@
 import { BaseService } from 'src/base/base.service';
 import { PrismaClient, User } from '@prisma/client';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 
 @Injectable()
 export class UserService extends BaseService<User> {
@@ -37,4 +37,16 @@ export class UserService extends BaseService<User> {
       where: { email },
     });
   }
+  async updateRefreshToken(id: string, refreshToken: string | null): Promise<void> {
+    try {
+      await this.prisma.user.update({
+        where: { id },
+        data: { refreshToken },
+      });
+    } catch (error) {
+      console.error('Failed to update refresh token:', error);
+      throw new HttpException('General exception', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+  }
+  
 }
