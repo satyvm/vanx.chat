@@ -4,12 +4,21 @@
   "type": "module",
   "scripts": {
     "build": "turbo run build",
+    "build:prd": "NODE_ENV=production turbo run build",
+    "build:prd:doppler": "doppler run --config prd -- turbo run build",
+    "build:stg": "NODE_ENV=staging turbo run build",
+    "build:stg:doppler": "doppler run --config stg -- turbo run build",
     "check-types": "turbo run check-types",
     "commit": "commit",
     "dev": "turbo run dev",
+    "dev:doppler": "doppler run --config dev -- turbo run dev",
+    "dev:stg": "NODE_ENV=staging turbo run dev",
+    "dev:stg:doppler": "doppler run --config stg -- turbo run dev",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
-    "prepare": "husky"
+    "prepare": "husky",
+    "start": "turbo run start",
+    "start:doppler": "doppler run -- turbo run start"
   },
   "lint-staged": {
     "*.{js,ts,tsx}": [
