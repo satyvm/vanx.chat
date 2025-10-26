@@ -1,39 +1,40 @@
 {
-  "name": "@vanx/www",
-  "version": "0.0.1",
-  "description": "The world's most intelligent and collaborative AI interaction hub",
-  "type": "module",
-  "scripts": {
-    "astro": "astro",
-    "build": "astro build",
-    "check-types": "astro check",
-    "dev": "astro dev",
-    "lint": "eslint \"src/**/*.{js,ts,astro}\" --fix",
-    "preview": "astro preview"
-  },
-  "dependencies": {
-    "@astrojs/react": "^4.4.0",
-    "@astrojs/sitemap": "^3.6.0",
-    "@fontsource/geist-mono": "^5.2.6",
-    "@fontsource/roboto": "^5.2.5",
-    "@tailwindcss/vite": "^4.1.5",
-    "@vanx/ui": "workspace:*",
-    "astro": "^5.14.5",
-    "astro-robots-txt": "^1.0.0",
-    "astro-seo": "^0.8.4",
-    "lucide-react": "^0.508.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "tailwindcss": "^4.1.5",
-    "vite": "^7.1.10"
-  },
-  "devDependencies": {
-    "@vanx/eslint-config": "workspace:*",
-    "@vanx/typescript-config": "workspace:*",
-    "eslint": "^9.34.0",
-    "prettier": "^3.5.3",
-    "prettier-plugin-astro": "^0.14.1",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "sharp": "^0.34.1"
-  }
+	"name": "@vanx/www",
+	"version": "0.0.1",
+	"description": "The world's most intelligent and collaborative AI interaction hub",
+	"type": "module",
+	"scripts": {
+		"astro": "astro",
+		"build": "astro build",
+		"check-types": "astro check",
+		"clean": "rm -rf dist .astro",
+		"dev": "astro dev",
+		"lint": "eslint \"src/**/*.{js,ts,astro}\" --fix",
+		"preview": "astro preview"
+	},
+	"dependencies": {
+		"@astrojs/react": "^4.4.0",
+		"@astrojs/sitemap": "^3.6.0",
+		"@fontsource/geist-mono": "^5.2.6",
+		"@fontsource/roboto": "^5.2.5",
+		"@tailwindcss/vite": "^4.1.5",
+		"@vanx/ui": "workspace:*",
+		"astro": "^5.14.5",
+		"astro-robots-txt": "^1.0.0",
+		"astro-seo": "^0.8.4",
+		"lucide-react": "^0.508.0",
+		"react": "^19.1.0",
+		"react-dom": "^19.1.0",
+		"tailwindcss": "^4.1.5",
+		"vite": "^7.1.10"
+	},
+	"devDependencies": {
+		"@vanx/eslint-config": "workspace:*",
+		"@vanx/typescript-config": "workspace:*",
+		"eslint": "^9.34.0",
+		"prettier": "^3.5.3",
+		"prettier-plugin-astro": "^0.14.1",
+		"prettier-plugin-tailwindcss": "^0.6.11",
+		"sharp": "^0.34.1"
+	}
 }

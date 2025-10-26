@@ -3,10 +3,10 @@
   "ui": "tui",
   "tasks": {
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "^db:generate"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**", "dist/**", ".astro/**"],
-      "env": ["PORT"]
+      "env": ["PORT", "DATABASE_URL", "JWT_SECRET", "NODE_ENV"]
     },
     "lint": {
       "dependsOn": ["^build"]
@@ -14,12 +14,25 @@
     "check-types": {
       "dependsOn": ["^build"]
     },
+    "clean": {
+      "cache": false
+    },
     "dev": {
+      "dependsOn": ["^db:generate"],
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "env": ["JWT_SECRET"]
     },
     "db:generate": {
       "cache": false
+    },
+    "db:migrate": {
+      "cache": false,
+      "persistent": true
+    },
+    "db:deploy": {
+      "cache": false,
+      "outputs": ["generated/prisma/**"]
     }
   }
 }

@@ -1,116 +1,69 @@
-import { PrismaClient } from '../generated/prisma';
-import * as bcrypt from 'bcryptjs';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 
-// Initialize Prisma Client
 const prisma = new PrismaClient();
 
-/**
- * Seeds the database with initial data
- */
-async function seedDatabase(): Promise<void> {
-  console.log('🌱 Starting database seeding...');
+async function main() {
+  console.log('🌱 Seeding database...');
 
-  try {
-    // Hash password helper with proper error handling
-    const hashPassword = async (password: string): Promise<string> => {
-      try {
-        return await bcrypt.hash(password, 12); // Increased salt rounds for better security
-      } catch (error) {
-        console.error('❌ Error hashing password:', error);
-        throw new Error('Failed to hash password');
-      }
-    };
+  // Clear existing data
+  await prisma.chat.deleteMany();
+  await prisma.user.deleteMany();
 
-    // Define seed data
-    const seedUsers = [
-      {
-        email: 'admin@example.com',
-        firstName: 'Admin',
-        lastName: 'User',
-        password: 'admin123',
-        role: 'admin',
-      },
-      {
-        email: 'john.doe@example.com',
-        firstName: 'John',
-        lastName: 'Doe',
-        password: 'password123',
-        role: 'user',
-      },
-      {
-        email: 'jane.smith@example.com',
-        firstName: 'Jane',
-        lastName: 'Smith',
-        password: 'password123',
-        role: 'user',
-      },
-    ];
+  // Create users
+  const hashedPassword = await bcrypt.hash('password123', 10);
 
-    // Create users with proper error handling
-    console.log('👥 Creating users...');
-    const createdUsers: Array<{
-      id: string;
-      email: string;
-      firstName: string;
-      lastName: string;
-      password: string;
-      refreshToken: string | null;
-      createdAt: Date;
-      updatedAt: Date;
-    }> = [];
+  const user1 = await prisma.user.create({
+    data: {
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
+      password: hashedPassword,
+    },
+  });
 
-    for (const userData of seedUsers) {
-      try {
-        const hashedPassword = await hashPassword(userData.password);
+  const user2 = await prisma.user.create({
+    data: {
+      name: 'Bob Smith',
+      email: 'bob@example.com',
+      password: hashedPassword,
+    },
+  });
 
-        const user = await prisma.user.upsert({
-          where: { email: userData.email },
-          update: {
-            // Only update if password is different (for re-seeding)
-            password: hashedPassword,
-            updatedAt: new Date(),
-          },
-          create: {
-            email: userData.email,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            password: hashedPassword,
-          },
-        });
+  // Create chats
+  await prisma.chat.create({
+    data: {
+      title: 'First Chat',
+      description: 'My first chat message',
+      body: 'Hello, this is the first chat!',
+      userId: user1.id,
+    },
+  });
 
-        createdUsers.push(user);
-        console.log(`✅ User created/updated: ${user.email}`);
-      } catch (error) {
-        console.error(`❌ Failed to create user ${userData.email}:`, error);
-        throw error;
-      }
-    }
+  await prisma.chat.create({
+    data: {
+      title: 'AI Discussion',
+      description: 'Discussing AI and ML',
+      body: "Let's talk about artificial intelligence and machine learning.",
+      userId: user1.id,
+    },
+  });
 
-    console.log(`🎉 Successfully seeded ${createdUsers.length} users`);
+  await prisma.chat.create({
+    data: {
+      title: 'DevOps Chat',
+      body: 'Setting up CI/CD pipelines and monitoring.',
+      userId: user2.id,
+    },
+  });
 
-    // Add any additional seed data here
-    // Example: Create sample chats, categories, etc.
-  } catch (error) {
-    console.error('💥 Seeding failed:', error);
-    throw error;
-  }
+  console.log('✅ Seeding completed successfully!');
 }
 
-/**
- * Main execution function with proper cleanup
- */
-async function main(): Promise<void> {
-  try {
-    await seedDatabase();
-    console.log('✅ Database seeding completed successfully!');
-  } catch (error) {
-    console.error('💥 Seeding process failed:', error);
+main()
+  .catch((e) => {
+    console.error('❌ Seeding failed:', e);
     process.exit(1);
-  } finally {
-    console.log('🔌 Disconnecting from database...');
+  })
+  .finally(async () => {
     await prisma.$disconnect();
-  }
-}
-
-// Execute the main function
-main();
+  });
