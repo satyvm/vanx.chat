@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -42,7 +43,7 @@ export function NavChats({
               </SidebarMenuButton>
             </SidebarMenuItem>
           ) : (
-            <>
+            <Fragment key={item.title}>
               {item.items && (
                 <>
                   {item.items.map((subItem) => (
@@ -56,7 +57,7 @@ export function NavChats({
                   ))}
                 </>
               )}
-            </>
+            </Fragment>
           ),
         )}
       </SidebarMenu>

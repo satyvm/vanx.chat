@@ -17,8 +17,8 @@ export class UserEntity implements User {
   @ApiProperty()
   updatedAt: Date;
 
-  @ApiProperty({ required: false, nullable: true })
-  name: string | null;
+  @ApiProperty()
+  name: string;
 
   @ApiProperty()
   email: string;
@@ -26,6 +26,6 @@ export class UserEntity implements User {
   @Exclude()
   password: string;
 
-  @ApiProperty()
+  @Exclude()
   refreshToken: string | null;
 }

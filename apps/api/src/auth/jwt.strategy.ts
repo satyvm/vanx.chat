@@ -14,12 +14,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { userId: payload.sub, username: payload.username };
+    return { id: payload.sub, email: payload.email };
   }
 }
 
 function extractCookie(req: any) {
-  if (req && req.cookies) {
+  if (req?.cookies?.ACCESS_TOKEN) {
     return req.cookies['ACCESS_TOKEN'];
   }
+  return null;
 }

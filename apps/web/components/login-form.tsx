@@ -26,6 +26,12 @@ export function LoginForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  const handleSocialClick = (provider: "apple" | "google") => {
+    setError(
+      `${provider === "apple" ? "Apple" : "Google"} login is coming soon`,
+    );
+  };
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
@@ -33,8 +39,7 @@ export function LoginForm({
 
     try {
       const res = await login(email, password);
-      if (res?.access_token) {
-        localStorage.setItem("token", res.access_token);
+      if (res?.user) {
         router.push("/dashboard");
       }
     } catch (err: any) {
@@ -104,6 +109,7 @@ export function LoginForm({
               variant="outline"
               type="button"
               className="flex items-center justify-center gap-2"
+              onClick={() => handleSocialClick("apple")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -121,6 +127,7 @@ export function LoginForm({
               variant="outline"
               type="button"
               className="flex items-center justify-center gap-2"
+              onClick={() => handleSocialClick("google")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
