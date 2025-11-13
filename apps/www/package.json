@@ -10,7 +10,8 @@
 		"clean": "rm -rf dist .astro",
 		"dev": "astro dev",
 		"lint": "eslint \"src/**/*.{js,ts,astro}\" --fix",
-		"preview": "astro preview"
+		"preview": "astro preview",
+		"start": "astro start"
 	},
 	"dependencies": {
 		"@astrojs/react": "^4.4.0",

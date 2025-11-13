@@ -23,6 +23,12 @@
       "persistent": true,
       "env": ["JWT_SECRET"]
     },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false,
+      "persistent": true,
+      "env": ["PORT", "DATABASE_URL", "JWT_SECRET", "NODE_ENV"]
+    },
     "db:generate": {
       "cache": false
     },
