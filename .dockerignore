@@ -1,0 +1,32 @@
+# VCS metadata
+.git
+.gitmodules
+.jj
+
+# Dependencies & caches
+node_modules
+**/node_modules
+.pnpm-store
+.turbo
+**/.turbo
+
+# Build outputs
+dist
+**/dist
+**/.next
+.next
+.astro
+
+# OS & editor cruft
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+.cursor
+
+# Local env & runtime files
+.env
+.env.*
+!.env.example
+coverage
+tmp
