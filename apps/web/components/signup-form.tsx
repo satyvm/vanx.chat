@@ -25,10 +25,15 @@ export function SignupForm({
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  const handleSocialClick = (provider: "apple" | "google") => {
+    setError(
+      `${provider === "apple" ? "Apple" : "Google"} signup is coming soon`,
+    );
+  };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -36,11 +41,8 @@ export function SignupForm({
     setError("");
 
     try {
-      const res = await signup({ email, password, firstName, lastName });
-
-      if (res?.access_token) {
-        // Store JWT
-        localStorage.setItem("token", res.access_token);
+      const res = await signup({ name, email, password });
+      if (res?.user) {
         router.push("/dashboard");
       } else {
         router.push("/login");
@@ -73,24 +75,13 @@ export function SignupForm({
           </div>
 
           <Field>
-            <FieldLabel htmlFor="firstName">First Name</FieldLabel>
+            <FieldLabel htmlFor="name">Name</FieldLabel>
             <Input
-              id="firstName"
-              placeholder="John"
+              id="name"
+              placeholder="John Doe"
               required
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-          </Field>
-
-          <Field>
-            <FieldLabel htmlFor="lastName">Last Name</FieldLabel>
-            <Input
-              id="lastName"
-              placeholder="Doe"
-              required
-              value={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </Field>
 
@@ -134,6 +125,7 @@ export function SignupForm({
               variant="outline"
               type="button"
               className="flex items-center justify-center gap-2"
+              onClick={() => handleSocialClick("apple")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -151,6 +143,7 @@ export function SignupForm({
               variant="outline"
               type="button"
               className="flex items-center justify-center gap-2"
+              onClick={() => handleSocialClick("google")}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"

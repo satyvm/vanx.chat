@@ -2,35 +2,47 @@ import { apiFetch } from "../utils/fetcher";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
-export async function login(email: string, password: string) {
-  const response: any = await apiFetch(`${BASE_URL}/auth/login`, {
+export interface AuthResponse {
+  accessToken: string;
+  refreshToken: string;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+}
+
+export async function login(
+  email: string,
+  password: string,
+): Promise<AuthResponse> {
+  return apiFetch<AuthResponse>(`${BASE_URL}/auth/login`, {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
-
-  // ✅ Store JWT in localStorage (or cookie)
-  if (response.access_token) {
-    localStorage.setItem("token", response.access_token);
-  }
-
-  return response;
 }
 
 export async function signup(data: {
+  name: string;
   email: string;
   password: string;
-  firstName: string;
-  lastName: string;
-}) {
-  const response: any = await apiFetch(`${BASE_URL}/auth/sign-up`, {
+}): Promise<AuthResponse> {
+  return apiFetch<AuthResponse>(`${BASE_URL}/auth/sign-up`, {
     method: "POST",
     body: JSON.stringify(data),
   });
+}
 
-  // Optional: auto-login after signup
-  if (response.access_token) {
-    localStorage.setItem("token", response.access_token);
-  }
+export async function logout() {
+  return apiFetch(`${BASE_URL}/auth/logout`, {
+    method: "POST",
+  });
+}
 
-  return response;
+export async function refresh(): Promise<AuthResponse> {
+  return apiFetch<AuthResponse>(`${BASE_URL}/auth/refresh`, {
+    method: "POST",
+  });
 }

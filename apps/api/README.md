@@ -45,7 +45,7 @@ turbo dev --filter=api
 turbo dev
 ```
 
-The API will be available at: http://localhost:3000
+The API will be available at: http://localhost:3001
 
 ### API-Specific Commands
 
@@ -75,11 +75,13 @@ Create `.env.local` in the `apps/api` directory:
 ```bash
 # Database
 DATABASE_URL=postgresql://user:pass@localhost:5432/vanx_dev
-REDIS_URL=redis://localhost:6379
 
 # Authentication
 JWT_SECRET=your-super-secret-jwt-key
-JWT_EXPIRES_IN=7d
+JWT_ACCESS_EXPIRES_IN=15m
+JWT_REFRESH_EXPIRES_IN=7d
+REFRESH_COOKIE_MAX_AGE=604800000
+WEB_APP_URL=http://localhost:3000
 
 # AI Provider APIs
 OPENAI_API_KEY=sk-...
@@ -88,11 +90,8 @@ GOOGLE_AI_API_KEY=...
 
 # Application
 NODE_ENV=development
-PORT=3000
+PORT=3001
 API_VERSION=v1
-
-# External Services
-CORS_ORIGIN=http://localhost:3001
 ```
 
 ## Project Structure
@@ -118,10 +117,10 @@ apps/api/src/
 
 ### Authentication
 
-- `POST /auth/login` - User login
-- `POST /auth/register` - User registration
-- `POST /auth/refresh` - Refresh access token
-- `POST /auth/logout` - User logout
+- `POST /auth/login` - User login with email/password
+- `POST /auth/sign-up` - User registration (returns tokens + profile)
+- `POST /auth/refresh` - Issue a fresh access/refresh token pair
+- `POST /auth/logout` - Revoke refresh token and clear cookies
 
 ### Users
 
