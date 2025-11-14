@@ -10,13 +10,12 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.json ./
 COPY packages ./packages
 COPY apps/api ./apps/api
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM deps AS builder
 ARG DATABASE_URL=postgresql://postgres:postgres@localhost:5432/postgres
 ENV DATABASE_URL=$DATABASE_URL
 RUN pnpm --filter @vanx/api build
-RUN pnpm --filter @vanx/api prisma generate
 RUN pnpm --filter @vanx/api deploy --prod --legacy /tmp/api
 
 FROM node:22-alpine AS runner

@@ -10,7 +10,7 @@ FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.json ./
 COPY packages ./packages
 COPY apps/web ./apps/web
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,target=/pnpm/store pnpm install --frozen-lockfile
 
 FROM deps AS builder
 ARG NEXT_PUBLIC_API_URL

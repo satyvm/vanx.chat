@@ -8,7 +8,7 @@ RUN corepack enable && apk add --no-cache libc6-compat
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.json ./
 COPY packages ./packages
 COPY apps/www ./apps/www
-RUN pnpm install --frozen-lockfile
+RUN --mount=type=cache,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm --filter @vanx/www build
 
 FROM nginx:1.29-alpine AS runner
