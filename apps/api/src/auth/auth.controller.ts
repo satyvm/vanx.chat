@@ -3,9 +3,10 @@ import {
   Controller,
   Post,
   Request,
-  Response,
+  Res,
   UseGuards,
 } from '@nestjs/common';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthEntity } from './entity/auth.entity';
@@ -28,19 +29,26 @@ export class AuthController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   @ApiOkResponse({ type: AuthEntity })
-  async login(@Body() _body: LoginDto, @Request() req, @Response() res) {
+  async login(
+    @Body() _body: LoginDto,
+    @Request() req,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const payload = await this.authService.login(req.user);
     this.setCookies(res, payload);
-    return res.status(200).json(payload);
+    return payload;
   }
 
   @Public()
   @Post('sign-up')
   @ApiOkResponse({ type: AuthEntity })
-  async userSignUp(@Body() body: CreateUserDto, @Response() res) {
+  async userSignUp(
+    @Body() body: CreateUserDto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
     const payload = await this.authService.userSignUp(body);
     this.setCookies(res, payload);
-    return res.status(201).json(payload);
+    return payload;
   }
 
   @UseGuards(JwtAuthGuard)
@@ -50,23 +58,23 @@ export class AuthController {
       example: { success: true },
     },
   })
-  async logout(@Request() req, @Response() res) {
+  async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
     await this.authService.removeRefreshToken(req.user.id);
 
     const options = this.getCookieOptions();
     res.clearCookie('ACCESS_TOKEN', options);
     res.clearCookie('REFRESH_TOKEN', options);
 
-    return res.status(200).json({ success: true });
+    return { success: true };
   }
 
   @Public()
   @Post('refresh')
   @ApiOkResponse({ type: AuthEntity })
-  async refresh(@Request() req, @Response() res) {
+  async refresh(@Request() req, @Res({ passthrough: true }) res: Response) {
     const payload = await this.authService.refresh(req.cookies?.REFRESH_TOKEN);
     this.setCookies(res, payload);
-    return res.status(200).json(payload);
+    return payload;
   }
 
   private getCookieOptions() {
@@ -78,7 +86,7 @@ export class AuthController {
     };
   }
 
-  private setCookies(@Response() res, tokens: AuthEntity) {
+  private setCookies(res: Response, tokens: AuthEntity) {
     const options = this.getCookieOptions();
 
     res.cookie('ACCESS_TOKEN', tokens.accessToken, options);
