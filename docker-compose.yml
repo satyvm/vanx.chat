@@ -46,7 +46,7 @@ services:
     environment:
       NODE_ENV: production
       PORT: ${API_PORT:-3001}
-      DATABASE_URL: postgresql://${POSTGRES_USER:-vanx}:${POSTGRES_PASSWORD:-vanx}@postgres:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-vanx}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vanx}:${POSTGRES_PASSWORD:-vanx}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-vanx}
       JWT_SECRET: ${JWT_SECRET:-local-dev-secret}
       JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-30m}
       JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
