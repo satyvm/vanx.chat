@@ -17,6 +17,7 @@
     "dev:doppler": "doppler run --config dev -- turbo run dev",
     "dev:stg": "NODE_ENV=staging turbo run dev",
     "dev:stg:doppler": "doppler run --config stg -- turbo run dev",
+    "docker:coolify": "node scripts/update-coolify-compose.mjs",
     "docker:down": "docker compose down",
     "docker:rebuild": "docker compose build --no-cache && docker compose up -d",
     "docker:up": "docker compose up -d --build",

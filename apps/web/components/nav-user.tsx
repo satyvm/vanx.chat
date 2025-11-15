@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   BadgeCheck,
   Bell,
@@ -29,6 +30,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@vanx/ui/components/sidebar";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/api/auth";
 
 export function NavUser({
   user,
@@ -40,6 +43,8 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const router = useRouter();
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
 
   return (
     <SidebarMenu>
@@ -102,9 +107,25 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem
+              disabled={isLoggingOut}
+              onSelect={async (event) => {
+                event.preventDefault();
+                if (isLoggingOut) return;
+                setIsLoggingOut(true);
+                try {
+                  await logout();
+                } catch (error) {
+                  console.error("Failed to log out", error);
+                } finally {
+                  setIsLoggingOut(false);
+                  router.push("/login");
+                  router.refresh();
+                }
+              }}
+            >
               <LogOut />
-              Log out
+              {isLoggingOut ? "Logging out..." : "Log out"}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

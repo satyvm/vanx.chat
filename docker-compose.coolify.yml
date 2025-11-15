@@ -1,0 +1,129 @@
+name: vanx-chat-coolify
+
+networks:
+  vanx-network:
+    driver: bridge
+
+services:
+  postgres:
+    image: postgres:17.6
+    restart: unless-stopped
+    networks:
+      - vanx-network
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-vanx}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-vanx}
+      POSTGRES_DB: ${POSTGRES_DB:-vanx}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-vanx} -d ${POSTGRES_DB:-vanx}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    expose:
+      - "5432"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.5"
+          memory: 256M
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    networks:
+      - vanx-network
+    environment:
+      NODE_ENV: production
+      PORT: ${API_PORT:-3001}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vanx}:${POSTGRES_PASSWORD:-vanx}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-vanx}
+      JWT_SECRET: ${JWT_SECRET:-local-dev-secret}
+      JWT_ACCESS_EXPIRES_IN: ${JWT_ACCESS_EXPIRES_IN:-30m}
+      JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
+      REFRESH_COOKIE_MAX_AGE: ${REFRESH_COOKIE_MAX_AGE:-62400}
+      WEB_APP_URL: ${WEB_APP_URL:-http://localhost:3000}
+    healthcheck:
+      test:
+        ["CMD-SHELL", "wget -q --spider http://localhost:3001/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      postgres:
+        condition: service_healthy
+    expose:
+      - "3001"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:3001}
+        NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-ws://api:3001}
+        NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+        NEXT_PUBLIC_HOTJAR_ID: ${NEXT_PUBLIC_HOTJAR_ID:-}
+    restart: unless-stopped
+    networks:
+      - vanx-network
+    environment:
+      NODE_ENV: production
+      PORT: ${WEB_PORT:-3000}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://api:3001}
+      NEXT_PUBLIC_WS_URL: ${NEXT_PUBLIC_WS_URL:-ws://api:3001}
+      NEXT_PUBLIC_GA_ID: ${NEXT_PUBLIC_GA_ID:-}
+      NEXT_PUBLIC_HOTJAR_ID: ${NEXT_PUBLIC_HOTJAR_ID:-}
+      NEXT_TELEMETRY_DISABLED: "1"
+    depends_on:
+      api:
+        condition: service_healthy
+    expose:
+      - "3000"
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 512M
+        reservations:
+          cpus: "0.25"
+          memory: 128M
+
+  www:
+    build:
+      context: .
+      dockerfile: apps/www/Dockerfile
+    restart: unless-stopped
+    networks:
+      - vanx-network
+    expose:
+      - "4321"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+
+volumes:
+  postgres:
