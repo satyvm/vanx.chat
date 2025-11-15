@@ -17,3 +17,4 @@ Useful helpers:
 - `docker compose logs -f api` (or `web`, `www`, `postgres`) to tail logs.
 - `docker compose up -d api web` to start only the app surfaces without the marketing site.
 - `docker compose down -v` to tear down everything and drop the Postgres volume.
+- `pnpm docker:coolify` regenerates `docker-compose.coolify.yml` without host port bindings so Coolify can proxy the services safely.
