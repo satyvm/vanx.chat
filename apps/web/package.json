@@ -3,6 +3,17 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
+  "files": [
+    ".next",
+    "app",
+    "components",
+    "lib",
+    "middleware.ts",
+    "next.config.mjs",
+    "package.json",
+    "node_modules",
+    "public"
+  ],
   "scripts": {
     "build": "next build",
     "check-types": "tsc --noEmit",
