@@ -27,7 +27,7 @@ for dir in "${API_DIR}" "${WEB_DIR}"; do
     fi
 done
 
-ensure_database() {
+ensure_services() {
     if ! command -v docker >/dev/null 2>&1; then
         echo "❌ docker is not installed."
         exit 1
@@ -43,16 +43,22 @@ ensure_database() {
         exit 1
     fi
 
-    if [[ -n "$(docker compose -f "${COMPOSE_FILE}" ps -q postgres 2>/dev/null)" ]]; then
+    if [[ -z "$(docker compose -f "${COMPOSE_FILE}" ps -q postgres 2>/dev/null)" ]]; then
+        echo "🐘 Starting postgres via docker compose..."
+        docker compose -f "${COMPOSE_FILE}" up -d postgres
+    else
         echo "✅ postgres container already running."
-        return
     fi
 
-    echo "🐘 Starting postgres via docker compose..."
-    docker compose -f "${COMPOSE_FILE}" up -d postgres
+    if [[ -z "$(docker compose -f "${COMPOSE_FILE}" ps -q redis 2>/dev/null)" ]]; then
+        echo "🧊 Starting redis via docker compose..."
+        docker compose -f "${COMPOSE_FILE}" up -d redis
+    else
+        echo "✅ redis container already running."
+    fi
 }
 
-ensure_database
+ensure_services
 
 if tmux has-session -t "${SESSION_NAME}" 2>/dev/null; then
     echo "ℹ️  Found existing ${SESSION_NAME} session - replacing it."

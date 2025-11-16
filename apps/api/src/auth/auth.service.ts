@@ -1,12 +1,18 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { User } from '@prisma/client';
+import { User, VerificationCodeType } from '@prisma/client';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthEntity } from './entity/auth.entity';
+import { VerificationCodesService } from './verification-codes.service';
+import { MailService } from 'src/mail/mail.service';
 
 export class Tokens {
   accessToken: string;
@@ -23,13 +29,23 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly usersService: UsersService,
     private readonly configService: ConfigService,
+    private readonly verificationCodesService: VerificationCodesService,
+    private readonly mailService: MailService,
   ) {}
 
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
     if (!user) return null;
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    return isPasswordValid ? user : null;
+    if (!isPasswordValid) return null;
+
+    if (!user.emailVerifiedAt) {
+      throw new UnauthorizedException(
+        'Please verify your email before logging in',
+      );
+    }
+
+    return user;
   }
 
   async generateTokens(user: User) {
@@ -48,11 +64,72 @@ export class AuthService {
 
   async userSignUp(data: CreateUserDto) {
     const user = await this.usersService.create(data);
+    await this.sendVerificationCode(user);
+    return user;
+  }
+
+  async verifyEmail(email: string, code: string) {
+    await this.verificationCodesService.verifyCode({
+      email,
+      code,
+      type: VerificationCodeType.SIGNUP,
+    });
+
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!user.emailVerifiedAt) {
+      const updated = await this.usersService.markEmailVerified(user.id);
+      return this.buildAuthResponse(updated);
+    }
+
     return this.buildAuthResponse(user);
   }
 
   async login(user: User) {
     return this.buildAuthResponse(user);
+  }
+
+  async requestPasswordReset(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      return;
+    }
+
+    const { code } = await this.verificationCodesService.createCode({
+      email: user.email,
+      userId: user.id,
+      type: VerificationCodeType.PASSWORD_RESET,
+    });
+
+    await this.mailService.queuePasswordResetEmail({
+      email: user.email,
+      name: user.name,
+      code,
+    });
+  }
+
+  async confirmPasswordReset(email: string, code: string, password: string) {
+    await this.verificationCodesService.verifyCode({
+      email,
+      code,
+      type: VerificationCodeType.PASSWORD_RESET,
+    });
+
+    const user = await this.usersService.findByEmail(email);
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    await this.usersService.updatePassword(user.id, password);
+
+    if (!user.emailVerifiedAt) {
+      await this.usersService.markEmailVerified(user.id);
+    }
+
+    await this.removeRefreshToken(user.id);
   }
 
   async updateRefreshToken(userId: string, refreshToken: string) {
@@ -108,6 +185,20 @@ export class AuthService {
       accessToken: tokens.accessToken,
       refreshToken: tokens.refreshToken,
       user: new UserEntity(user),
+    });
+  }
+
+  private async sendVerificationCode(user: User) {
+    const { code } = await this.verificationCodesService.createCode({
+      email: user.email,
+      userId: user.id,
+      type: VerificationCodeType.SIGNUP,
+    });
+
+    await this.mailService.queueVerificationEmail({
+      email: user.email,
+      name: user.name,
+      code,
     });
   }
 

@@ -36,6 +36,40 @@ services:
           cpus: "0.5"
           memory: 256M
 
+  redis:
+    image: redis:7.4-alpine
+    restart: unless-stopped
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--requirepass",
+        "${REDIS_PASSWORD:-vanx}",
+      ]
+    networks:
+      - vanx-network
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-vanx}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-vanx}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+
   api:
     build:
       context: .
@@ -52,6 +86,10 @@ services:
       JWT_REFRESH_EXPIRES_IN: ${JWT_REFRESH_EXPIRES_IN:-7d}
       REFRESH_COOKIE_MAX_AGE: ${REFRESH_COOKIE_MAX_AGE:-62400}
       WEB_APP_URL: ${WEB_APP_URL:-http://localhost:3000}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+      REDIS_HOST: ${REDIS_HOST:-redis}
+      REDIS_PORT: ${REDIS_PORT:-6379}
+      REDIS_PASSWORD: ${REDIS_PASSWORD:-vanx}
     healthcheck:
       test:
         ["CMD-SHELL", "wget -q --spider http://localhost:3001/health || exit 1"]
@@ -61,6 +99,8 @@ services:
       start_period: 30s
     depends_on:
       postgres:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     ports:
       - "${API_PORT:-3001}:3001"
@@ -127,3 +167,4 @@ services:
 
 volumes:
   postgres:
+  redis:

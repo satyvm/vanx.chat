@@ -5,6 +5,8 @@
 3. Run the full stack with `docker compose up -d` (or remove `-d` to keep logs in the foreground).
 4. When you need to publish container images, run `./scripts/push-images.sh my-tag` (defaults to `latest`). Make sure you’re logged in to `registry.digitalocean.com` first, or override the registry via `REGISTRY=...`. Images build for `linux/amd64` by default—set `TARGET_PLATFORM` if you need something else.
 
+If the API is hosted on a different subdomain than the web app (for example `api.example.com` vs `app.example.com`), set `COOKIE_DOMAIN` in `.env` to a shared parent domain such as `.example.com`. This ensures the browser sends the auth cookies back to both the API (where they were set) and the web frontend, allowing redirects and middleware guards to work correctly in production.
+
 Services:
 
 - `postgres`: persistent database with health checks and the credentials from `.env`.

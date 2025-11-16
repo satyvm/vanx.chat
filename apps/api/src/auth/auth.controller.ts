@@ -6,9 +6,9 @@ import {
   Res,
   UseGuards,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import type { CookieOptions, Response } from 'express';
 import { AuthService } from './auth.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiProperty, ApiTags } from '@nestjs/swagger';
 import { AuthEntity } from './entity/auth.entity';
 import { ConfigService } from '@nestjs/config';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
@@ -16,6 +16,20 @@ import { AuthGuard } from '@nestjs/passport';
 import { Public } from './public.decorator';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { LoginDto } from './dto/login.dto';
+import { VerifyEmailDto } from './dto/verify-email.dto';
+import { RequestPasswordResetDto } from './dto/request-password-reset.dto';
+import { ConfirmPasswordResetDto } from './dto/confirm-password-reset.dto';
+
+class SignupPendingResponse {
+  @ApiProperty()
+  success: boolean;
+
+  @ApiProperty()
+  email: string;
+
+  @ApiProperty()
+  message: string;
+}
 
 @Controller('auth')
 @ApiTags('auth')
@@ -41,12 +55,24 @@ export class AuthController {
 
   @Public()
   @Post('sign-up')
+  @ApiOkResponse({ type: SignupPendingResponse })
+  async userSignUp(@Body() body: CreateUserDto) {
+    const user = await this.authService.userSignUp(body);
+    return {
+      success: true,
+      email: user.email,
+      message: 'Verification code sent to your email',
+    };
+  }
+
+  @Public()
+  @Post('email/verify')
   @ApiOkResponse({ type: AuthEntity })
-  async userSignUp(
-    @Body() body: CreateUserDto,
+  async verifyEmail(
+    @Body() body: VerifyEmailDto,
     @Res({ passthrough: true }) res: Response,
   ) {
-    const payload = await this.authService.userSignUp(body);
+    const payload = await this.authService.verifyEmail(body.email, body.code);
     this.setCookies(res, payload);
     return payload;
   }
@@ -77,13 +103,46 @@ export class AuthController {
     return payload;
   }
 
-  private getCookieOptions() {
-    return {
+  @Public()
+  @Post('password/reset/request')
+  @ApiOkResponse({
+    schema: {
+      example: { success: true },
+    },
+  })
+  async requestPasswordReset(@Body() body: RequestPasswordResetDto) {
+    await this.authService.requestPasswordReset(body.email);
+    return { success: true };
+  }
+
+  @Public()
+  @Post('password/reset/confirm')
+  @ApiOkResponse({
+    schema: {
+      example: { success: true },
+    },
+  })
+  async confirmPasswordReset(@Body() body: ConfirmPasswordResetDto) {
+    await this.authService.confirmPasswordReset(
+      body.email,
+      body.code,
+      body.password,
+    );
+    return { success: true };
+  }
+
+  private getCookieOptions(): CookieOptions {
+    const cookieOptions: CookieOptions = {
       httpOnly: true,
       secure: this.configService.get('NODE_ENV') === 'production',
       sameSite: 'lax' as const,
       path: '/',
     };
+    const cookieDomain = this.configService.get<string>('COOKIE_DOMAIN');
+    if (cookieDomain) {
+      cookieOptions.domain = cookieDomain;
+    }
+    return cookieOptions;
   }
 
   private setCookies(res: Response, tokens: AuthEntity) {
