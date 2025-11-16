@@ -12,6 +12,8 @@ import { PrismaClient } from '@prisma/client';
 import Queue from 'bull';
 import { Resend } from 'resend';
 
+const DEFAULT_TIMEOUT_MS = Number(process.env.ENV_CHECK_TIMEOUT_MS ?? '8000');
+
 const SYMBOLS = {
   pass: '✅',
   fail: '❌',
@@ -42,7 +44,7 @@ const SERVICE_CHECKS = [
       });
 
       try {
-        await prisma.$queryRaw`SELECT 1`;
+        await withTimeout(prisma.$queryRaw`SELECT 1`, 'Postgres ping');
       } finally {
         await prisma.$disconnect();
       }
@@ -61,13 +63,14 @@ const SERVICE_CHECKS = [
           host,
           port,
           password,
+          connectTimeout: DEFAULT_TIMEOUT_MS,
         },
       });
 
       try {
-        await queue.waitUntilReady();
-        const client = await queue.client;
-        const pong = await client.ping();
+        await withTimeout(queue.isReady(), 'Redis connection');
+        const client = queue.client;
+        const pong = await withTimeout(client.ping(), 'Redis PING');
         if (pong !== 'PONG') {
           throw new Error(`Unexpected PING response: ${pong}`);
         }
@@ -84,7 +87,10 @@ const SERVICE_CHECKS = [
       const from = extractEmailAddress(requireEnv('RESEND_FROM_EMAIL'));
       const resend = new Resend(apiKey);
 
-      const domainsResponse = await resend.domains.list({ limit: 100 });
+      const domainsResponse = await withTimeout(
+        resend.domains.list({ limit: 100 }),
+        'Resend domains list',
+      );
       if (domainsResponse.error) {
         throw new Error(
           `API error ${domainsResponse.error.statusCode ?? ''} ${domainsResponse.error.name}: ${domainsResponse.error.message}`,
@@ -287,6 +293,24 @@ async function runChecks() {
 
 function logStatus(status, message) {
   console.log(`${SYMBOLS[status]} ${message}`);
+}
+
+function withTimeout(promise, label, timeoutMs = DEFAULT_TIMEOUT_MS) {
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      reject(new Error(`${label} timed out after ${timeoutMs}ms`));
+    }, timeoutMs);
+
+    promise
+      .then((value) => {
+        clearTimeout(timer);
+        resolve(value);
+      })
+      .catch((error) => {
+        clearTimeout(timer);
+        reject(error);
+      });
+  });
 }
 
 runChecks().catch((error) => {
