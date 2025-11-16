@@ -5,6 +5,8 @@ import { UsersService } from 'src/users/users.service';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { UnauthorizedException } from '@nestjs/common';
+import { VerificationCodesService } from './verification-codes.service';
+import { MailService } from 'src/mail/mail.service';
 
 const userFactory = () => ({
   id: 'user-1',
@@ -12,6 +14,7 @@ const userFactory = () => ({
   email: 'test@example.com',
   password: 'hashed-password',
   refreshToken: null,
+  emailVerifiedAt: new Date(),
   createdAt: new Date(),
   updatedAt: new Date(),
 });
@@ -19,6 +22,14 @@ const userFactory = () => ({
 describe('AuthService', () => {
   let service: AuthService;
   let usersService: jest.Mocked<UsersService>;
+  let verificationCodesService: {
+    createCode: jest.Mock;
+    verifyCode: jest.Mock;
+  };
+  const mailService = {
+    queueVerificationEmail: jest.fn(),
+    queuePasswordResetEmail: jest.fn(),
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,6 +47,8 @@ describe('AuthService', () => {
             findOne: jest.fn(),
             create: jest.fn(),
             updateRefreshToken: jest.fn(),
+            markEmailVerified: jest.fn(),
+            updatePassword: jest.fn(),
           },
         },
         {
@@ -55,11 +68,23 @@ describe('AuthService', () => {
             }),
           },
         },
+        {
+          provide: VerificationCodesService,
+          useValue: {
+            createCode: jest.fn(),
+            verifyCode: jest.fn(),
+          },
+        },
+        {
+          provide: MailService,
+          useValue: mailService,
+        },
       ],
     }).compile();
 
     service = module.get<AuthService>(AuthService);
     usersService = module.get(UsersService);
+    verificationCodesService = module.get(VerificationCodesService);
   });
 
   it('should be defined', () => {

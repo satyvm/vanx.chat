@@ -28,4 +28,7 @@ export class UserEntity implements User {
 
   @Exclude()
   refreshToken: string | null;
+
+  @ApiProperty({ required: false, nullable: true })
+  emailVerifiedAt: Date | null;
 }

@@ -1,0 +1,24 @@
+-- CreateEnum
+CREATE TYPE "VerificationCodeType" AS ENUM ('SIGNUP', 'PASSWORD_RESET');
+
+-- AlterTable
+ALTER TABLE "User" ADD COLUMN     "emailVerifiedAt" TIMESTAMP(3);
+
+-- CreateTable
+CREATE TABLE "VerificationCode" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "codeHash" TEXT NOT NULL,
+    "type" "VerificationCodeType" NOT NULL,
+    "userId" TEXT,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
+    "consumedAt" TIMESTAMP(3),
+    "attempts" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "VerificationCode_pkey" PRIMARY KEY ("id")
+);
+
+-- AddForeignKey
+ALTER TABLE "VerificationCode" ADD CONSTRAINT "VerificationCode_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE SET NULL ON UPDATE CASCADE;

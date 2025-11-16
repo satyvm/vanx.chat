@@ -21,6 +21,8 @@
     "docker:down": "docker compose down",
     "docker:rebuild": "docker compose build --no-cache && docker compose up -d",
     "docker:up": "docker compose up -d --build",
+    "env:check": "pnpm --filter=api env:check",
+    "env:sync": "node scripts/sync-env.mjs",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "lint": "turbo run lint",
     "prepare": "husky",
