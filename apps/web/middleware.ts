@@ -85,7 +85,7 @@ function isJwtExpired(token?: string | null) {
 
 function decodeJwt(token: string) {
   const parts = token.split(".");
-  if (parts.length < 2) return null;
+  if (parts.length < 2 || !parts[1]) return null;
   const payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
   const padded = payload + "=".repeat((4 - (payload.length % 4 || 4)) % 4);
   try {
