@@ -1,6 +1,8 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+pnpm docker:coolify
+
 echo "🔨 Building all projects before push..."
 pnpm build
 

@@ -142,6 +142,26 @@ export class AuthService {
     await this.usersService.updateRefreshToken(userId, null);
   }
 
+  async logoutWithRefreshToken(refreshToken?: string) {
+    if (!refreshToken) {
+      return;
+    }
+
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken, {
+        secret: this.configService.get<string>('JWT_SECRET'),
+      });
+      const userId = payload.sub ?? payload.id;
+      const isValid = await this.validateRefreshToken(userId, refreshToken);
+      if (!isValid) {
+        return;
+      }
+      await this.removeRefreshToken(userId);
+    } catch {
+      // Ignore invalid/expired tokens; logout is best-effort.
+    }
+  }
+
   async validateRefreshToken(userId: string, token: string) {
     const user = await this.usersService.findOne(userId);
     if (!user || !user.refreshToken) return false;

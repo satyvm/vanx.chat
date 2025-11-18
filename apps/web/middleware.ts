@@ -2,6 +2,9 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
 const PUBLIC_PATHS = new Set(["/", "/login", "/signup"]);
+const ACCESS_COOKIE = "ACCESS_TOKEN";
+const REFRESH_COOKIE = "REFRESH_TOKEN";
+const NEEDS_REFRESH_COOKIE = "VX_NEEDS_REFRESH";
 
 function isPublicPath(pathname: string) {
   if (PUBLIC_PATHS.has(pathname)) return true;
@@ -14,7 +17,13 @@ function isPublicPath(pathname: string) {
 
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
-  const accessToken = request.cookies.get("ACCESS_TOKEN");
+  const accessToken = request.cookies.get(ACCESS_COOKIE);
+  const refreshToken = request.cookies.get(REFRESH_COOKIE);
+
+  const hasValidAccess = !!accessToken && !isJwtExpired(accessToken.value);
+  const hasValidRefresh = !!refreshToken && !isJwtExpired(refreshToken.value);
+  const needsRefresh = !hasValidAccess && hasValidRefresh;
+  const shouldLogout = !hasValidAccess && !hasValidRefresh;
 
   const redirectToLogin = () => {
     const url = request.nextUrl.clone();
@@ -22,15 +31,15 @@ export function middleware(request: NextRequest) {
     if (pathname !== "/login") {
       url.searchParams.set("redirect", pathname + (search ? search : ""));
     }
-    return NextResponse.redirect(url);
+    const response = NextResponse.redirect(url);
+    response.cookies.delete(ACCESS_COOKIE, { path: "/" });
+    response.cookies.delete(REFRESH_COOKIE, { path: "/" });
+    response.cookies.delete(NEEDS_REFRESH_COOKIE, { path: "/" });
+    return response;
   };
 
   if (isPublicPath(pathname)) {
-    if (pathname !== "/login" && pathname !== "/signup") {
-      return NextResponse.next();
-    }
-
-    if (accessToken) {
+    if ((pathname === "/login" || pathname === "/signup") && hasValidAccess) {
       const url = request.nextUrl.clone();
       url.pathname = "/dashboard";
       url.search = "";
@@ -40,11 +49,63 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  if (!accessToken) {
+  if (hasValidAccess) {
+    const response = NextResponse.next();
+    if (request.cookies.get(NEEDS_REFRESH_COOKIE)) {
+      response.cookies.delete(NEEDS_REFRESH_COOKIE, { path: "/" });
+    }
+    return response;
+  }
+
+  if (needsRefresh) {
+    const response = NextResponse.next();
+    response.cookies.set(NEEDS_REFRESH_COOKIE, "1", {
+      path: "/",
+      httpOnly: false,
+      sameSite: "lax",
+    });
+    return response;
+  }
+
+  if (shouldLogout) {
     return redirectToLogin();
   }
 
   return NextResponse.next();
+}
+
+function isJwtExpired(token?: string | null) {
+  if (!token) return true;
+  const payload = decodeJwt(token);
+  if (!payload?.exp) return false;
+  return payload.exp * 1000 <= Date.now();
+}
+
+function decodeJwt(token: string) {
+  const parts = token.split(".");
+  if (parts.length < 2) return null;
+  const payload = parts[1].replace(/-/g, "+").replace(/_/g, "/");
+  const padded = payload + "=".repeat((4 - (payload.length % 4 || 4)) % 4);
+  try {
+    if (typeof atob === "function") {
+      return JSON.parse(atob(padded));
+    }
+
+    type NodeBufferLike = {
+      from(
+        data: string,
+        encoding: string,
+      ): { toString(encoding: string): string };
+    };
+    const nodeBuffer = (globalThis as { Buffer?: NodeBufferLike }).Buffer;
+    if (nodeBuffer) {
+      return JSON.parse(nodeBuffer.from(padded, "base64").toString("utf8"));
+    }
+
+    return null;
+  } catch {
+    return null;
+  }
 }
 
 export const config = {

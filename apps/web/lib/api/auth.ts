@@ -51,12 +51,14 @@ export async function verifyEmailCode(email: string, code: string) {
 export async function logout() {
   return apiFetch(`${BASE_URL}/auth/logout`, {
     method: "POST",
+    skipAuthRetry: true,
   });
 }
 
 export async function refresh(): Promise<AuthResponse> {
   return apiFetch<AuthResponse>(`${BASE_URL}/auth/refresh`, {
     method: "POST",
+    skipAuthRetry: true,
   });
 }
 
