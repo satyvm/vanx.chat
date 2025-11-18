@@ -38,8 +38,10 @@ export function ResetPasswordForm({
       await requestPasswordReset(email);
       setStage("confirm");
       setInfoMessage("We've sent a reset code to your email.");
-    } catch (err: any) {
-      setError(err.message || "Failed to send reset email");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to send reset email";
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -59,8 +61,10 @@ export function ResetPasswordForm({
       await confirmPasswordReset(email, code, password);
       onSuccess("Password updated. You can now log in.");
       resetForm();
-    } catch (err: any) {
-      setError(err.message || "Failed to reset password");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Failed to reset password";
+      setError(message);
     } finally {
       setLoading(false);
     }

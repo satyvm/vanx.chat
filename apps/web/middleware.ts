@@ -32,9 +32,9 @@ export function middleware(request: NextRequest) {
       url.searchParams.set("redirect", pathname + (search ? search : ""));
     }
     const response = NextResponse.redirect(url);
-    response.cookies.delete(ACCESS_COOKIE, { path: "/" });
-    response.cookies.delete(REFRESH_COOKIE, { path: "/" });
-    response.cookies.delete(NEEDS_REFRESH_COOKIE, { path: "/" });
+    deleteCookie(response, ACCESS_COOKIE);
+    deleteCookie(response, REFRESH_COOKIE);
+    deleteCookie(response, NEEDS_REFRESH_COOKIE);
     return response;
   };
 
@@ -52,14 +52,16 @@ export function middleware(request: NextRequest) {
   if (hasValidAccess) {
     const response = NextResponse.next();
     if (request.cookies.get(NEEDS_REFRESH_COOKIE)) {
-      response.cookies.delete(NEEDS_REFRESH_COOKIE, { path: "/" });
+      deleteCookie(response, NEEDS_REFRESH_COOKIE);
     }
     return response;
   }
 
   if (needsRefresh) {
     const response = NextResponse.next();
-    response.cookies.set(NEEDS_REFRESH_COOKIE, "1", {
+    response.cookies.set({
+      name: NEEDS_REFRESH_COOKIE,
+      value: "1",
       path: "/",
       httpOnly: false,
       sameSite: "lax",
@@ -106,6 +108,15 @@ function decodeJwt(token: string) {
   } catch {
     return null;
   }
+}
+
+function deleteCookie(response: NextResponse, name: string) {
+  response.cookies.set({
+    name,
+    value: "",
+    path: "/",
+    maxAge: 0,
+  });
 }
 
 export const config = {
