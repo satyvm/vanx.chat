@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-} from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Resend } from 'resend';
 import {
@@ -36,10 +32,11 @@ export class ResendService {
     recipient: string,
   ) {
     if (!this.resend || !this.fromEmail) {
-      this.logger.error('Resend is not configured correctly.');
-      throw new InternalServerErrorException(
-        'Email service is not configured properly',
+      this.logger.warn(
+        'Resend credentials missing; logging email contents for debugging.',
       );
+      this.logFallbackEmail(template, recipient);
+      return;
     }
 
     await this.resend.emails.send({
@@ -49,5 +46,14 @@ export class ResendService {
       html: template.html,
       text: template.text,
     });
+  }
+
+  private logFallbackEmail(
+    template: { subject: string; html: string; text: string },
+    recipient: string,
+  ) {
+    this.logger.log(
+      `Email to ${recipient} (${template.subject}): ${template.text}`,
+    );
   }
 }

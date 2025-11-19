@@ -79,8 +79,11 @@ export function middleware(request: NextRequest) {
 function isJwtExpired(token?: string | null) {
   if (!token) return true;
   const payload = decodeJwt(token);
-  if (!payload?.exp) return false;
-  return payload.exp * 1000 <= Date.now();
+  if (!payload?.exp) return true;
+  const exp =
+    typeof payload.exp === "number" ? payload.exp : Number(payload.exp);
+  if (!Number.isFinite(exp)) return true;
+  return exp * 1000 <= Date.now();
 }
 
 function decodeJwt(token: string) {

@@ -9,7 +9,7 @@ import {
   NotFoundException,
   UseGuards,
 } from '@nestjs/common';
-import { UsersService, roundsOfHashing } from './users.service';
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
@@ -20,7 +20,6 @@ import {
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import * as bcrypt from 'bcrypt';
 
 @Controller('users')
 @ApiTags('users')
@@ -59,12 +58,6 @@ export class UsersController {
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    if (updateUserDto.password) {
-      updateUserDto.password = await bcrypt.hash(
-        updateUserDto.password,
-        roundsOfHashing,
-      );
-    }
     const user = await this.usersService.update(id, updateUserDto);
     if (!user) {
       throw new NotFoundException('User not found');

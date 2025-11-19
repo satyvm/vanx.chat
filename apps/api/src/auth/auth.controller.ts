@@ -163,7 +163,13 @@ export class AuthController {
   }
 
   private parseExpiryToMs(expiry: string): number {
-    const match = expiry.match(/^(\d+)([smhd])$/);
+    const normalized = (expiry || '').trim().toLowerCase();
+    const numericOnly = Number(normalized);
+    if (normalized && Number.isFinite(numericOnly)) {
+      return numericOnly;
+    }
+
+    const match = normalized.match(/^(\d+)([smhd])$/);
     if (!match || !match[1] || !match[2]) {
       return 1000 * 60 * 15;
     }

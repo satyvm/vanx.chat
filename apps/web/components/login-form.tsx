@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { GalleryVerticalEnd } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { cn } from "@vanx/ui/lib/utils";
 import { Button } from "@vanx/ui/components/button";
 import {
@@ -22,6 +22,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,10 @@ export function LoginForm({
     try {
       const res = await login(email, password);
       if (res?.user) {
-        router.push("/dashboard");
+        const redirect = searchParams.get("redirect");
+        const destination =
+          redirect && redirect.startsWith("/") ? redirect : "/dashboard";
+        router.push(destination);
       }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Login failed";
