@@ -50,8 +50,9 @@ export function SignupForm({
       setPendingEmail(res.email);
       setInfoMessage(res.message);
       setStage("verify");
-    } catch (err: any) {
-      setError(err.message || "Signup failed");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Signup failed";
+      setError(message);
     } finally {
       setSignupLoading(false);
     }
@@ -67,8 +68,10 @@ export function SignupForm({
       if (res?.user) {
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      setError(err.message || "Verification failed");
+    } catch (err) {
+      const message =
+        err instanceof Error ? err.message : "Verification failed";
+      setError(message);
     } finally {
       setVerifyLoading(false);
     }

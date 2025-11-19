@@ -77,7 +77,7 @@ export class AuthController {
     return payload;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @Public()
   @Post('logout')
   @ApiOkResponse({
     schema: {
@@ -85,7 +85,7 @@ export class AuthController {
     },
   })
   async logout(@Request() req, @Res({ passthrough: true }) res: Response) {
-    await this.authService.removeRefreshToken(req.user.id);
+    await this.authService.logoutWithRefreshToken(req.cookies?.REFRESH_TOKEN);
 
     const options = this.getCookieOptions();
     res.clearCookie('ACCESS_TOKEN', options);
@@ -148,16 +148,44 @@ export class AuthController {
   private setCookies(res: Response, tokens: AuthEntity) {
     const options = this.getCookieOptions();
 
-    res.cookie('ACCESS_TOKEN', tokens.accessToken, options);
+    res.cookie('ACCESS_TOKEN', tokens.accessToken, {
+      ...options,
+      maxAge: this.parseExpiryToMs(
+        this.configService.get<string>('JWT_ACCESS_EXPIRES_IN') || '15m',
+      ),
+    });
     res.cookie('REFRESH_TOKEN', tokens.refreshToken, {
       ...options,
-      maxAge: this.getRefreshCookieMaxAge(),
+      maxAge: this.parseExpiryToMs(
+        this.configService.get<string>('JWT_REFRESH_EXPIRES_IN') || '7d',
+      ),
     });
   }
 
-  private getRefreshCookieMaxAge() {
-    const raw = this.configService.get<string>('REFRESH_COOKIE_MAX_AGE');
-    const parsed = raw ? Number(raw) : NaN;
-    return Number.isNaN(parsed) ? 1000 * 60 * 60 * 24 * 7 : parsed;
+  private parseExpiryToMs(expiry: string): number {
+    const normalized = (expiry || '').trim().toLowerCase();
+    const numericOnly = Number(normalized);
+    if (normalized && Number.isFinite(numericOnly)) {
+      return numericOnly;
+    }
+
+    const match = normalized.match(/^(\d+)([smhd])$/);
+    if (!match || !match[1] || !match[2]) {
+      return 1000 * 60 * 15;
+    }
+    const value = parseInt(match[1], 10);
+    const unit = match[2];
+    switch (unit) {
+      case 's':
+        return value * 1000;
+      case 'm':
+        return value * 60 * 1000;
+      case 'h':
+        return value * 60 * 60 * 1000;
+      case 'd':
+        return value * 24 * 60 * 60 * 1000;
+      default:
+        return 1000 * 60 * 15;
+    }
   }
 }
