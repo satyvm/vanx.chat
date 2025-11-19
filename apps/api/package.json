@@ -14,6 +14,7 @@
   "scripts": {
     "prebuild": "prisma generate",
     "build": "nest build",
+    "check-types": "tsc --noEmit",
     "clean": "rm -rf dist generated",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",

@@ -30,7 +30,7 @@ const data = {
   user: {
     name: "root",
     email: "root@vanx.chat",
-    avatar: "/avatars/shadcn.jpg",
+    avatar: "https://avatar.vercel.sh/vanx?text=VX",
   },
   teams: [
     {

@@ -45,8 +45,9 @@ export function LoginForm({
       if (res?.user) {
         router.push("/dashboard");
       }
-    } catch (err: any) {
-      setError(err.message || "Login failed");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Login failed";
+      setError(message);
     } finally {
       setLoading(false);
     }

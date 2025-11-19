@@ -1,1 +1,20 @@
-pnpm commitlint --edit $1
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+# Ensure pnpm is available
+export PATH="$HOME/.local/share/pnpm:$PATH"
+if command -v pnpm >/dev/null 2>&1; then
+  pnpm commitlint --edit $1
+else
+  # Fallback: try to find pnpm via npm or corepack
+  if command -v corepack >/dev/null 2>&1; then
+    corepack enable
+    pnpm commitlint --edit $1
+  elif [ -f "$HOME/.nvm/nvm.sh" ]; then
+    . "$HOME/.nvm/nvm.sh"
+    pnpm commitlint --edit $1
+  else
+    echo "Error: pnpm not found. Please install pnpm or ensure it's in your PATH."
+    exit 1
+  fi
+fi
