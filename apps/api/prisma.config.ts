@@ -1,17 +1,16 @@
-import path from 'node:path';
 import 'dotenv/config';
-import type { PrismaConfig } from 'prisma';
+import { defineConfig } from 'prisma/config';
+import { buildDatabaseUrlFromEnv } from './src/config/database.config.js';
 
-export default {
-  schema: path.join('prisma', 'schema.prisma'),
+const databaseUrl = buildDatabaseUrlFromEnv();
+
+export default defineConfig({
+  schema: 'prisma/schema.prisma',
   migrations: {
-    path: path.join('prisma', 'migrations'),
-    seed: 'pnpm exec ts-node prisma/seed.ts',
+    path: 'prisma/migrations',
+    seed: 'pnpm exec tsx prisma/seed.ts',
   },
-  views: {
-    path: path.join('prisma', 'views'),
+  datasource: {
+    url: databaseUrl,
   },
-  typedSql: {
-    path: path.join('prisma', 'queries'),
-  },
-} satisfies PrismaConfig;
+});
