@@ -1,5 +1,5 @@
-import { LanguageModel } from 'ai';
+import type { LanguageModelV2 } from '@ai-sdk/provider';
 
 export interface ProviderAdapter {
-  getModel(modelId?: string): LanguageModel;
+  getModel(modelId?: string): LanguageModelV2;
 }

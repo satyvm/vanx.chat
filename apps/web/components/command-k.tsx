@@ -1,14 +1,8 @@
 "use client";
 
 import React from "react";
-import {
-  Calculator,
-  Calendar,
-  CreditCard,
-  Settings,
-  Smile,
-  User,
-} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { MessageCircle, Plus } from "lucide-react";
 import {
   CommandDialog,
   CommandEmpty,
@@ -16,12 +10,27 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
 } from "@vanx/ui/components/command";
+import { ChatListContext } from "@/components/chat-list-provider";
 
-export function CommandK() {
+const CommandKContext = React.createContext<{
+  open: boolean;
+  setOpen: (open: boolean) => void;
+} | null>(null);
+
+function useChatListSafe() {
+  const context = React.useContext(ChatListContext);
+  return context;
+}
+
+export function CommandKProvider({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = React.useState(false);
+  const [search, setSearch] = React.useState("");
+  const router = useRouter();
+  const chatListContext = useChatListSafe();
+
+  const chats = chatListContext?.chats ?? [];
+  const setActiveChatId = chatListContext?.setActiveChatId;
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -34,44 +43,83 @@ export function CommandK() {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  const filteredChats = React.useMemo(() => {
+    if (!search.trim()) {
+      return chats;
+    }
+    const searchLower = search.toLowerCase();
+    return chats.filter(
+      (chat) =>
+        chat.title.toLowerCase().includes(searchLower) ||
+        chat.description?.toLowerCase().includes(searchLower),
+    );
+  }, [chats, search]);
+
+  const handleNewChat = () => {
+    setActiveChatId?.(undefined);
+    router.push("/chat/new");
+    setOpen(false);
+    setSearch("");
+  };
+
+  const handleSelectChat = (chatId: string) => {
+    setActiveChatId?.(chatId);
+    router.push(`/chat/${chatId}`);
+    setOpen(false);
+    setSearch("");
+  };
+
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          <CommandItem>
-            <Calendar />
-            <span>Calendar</span>
-          </CommandItem>
-          <CommandItem>
-            <Smile />
-            <span>Search Emoji</span>
-          </CommandItem>
-          <CommandItem disabled>
-            <Calculator />
-            <span>Calculator</span>
-          </CommandItem>
-          <CommandItem>
-            <CreditCard />
-            <span>Collapse Sidebar</span>
-            <CommandShortcut>⌘B</CommandShortcut>
-          </CommandItem>
-        </CommandGroup>
-        <CommandSeparator />
-        <CommandGroup heading="Settings">
-          <CommandItem>
-            <User />
-            <span>Profile</span>
-            <CommandShortcut>⌘P</CommandShortcut>
-          </CommandItem>
-          <CommandItem>
-            <Settings />
-            <span>Settings</span>
-            <CommandShortcut>⌘S</CommandShortcut>
-          </CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </CommandDialog>
+    <CommandKContext.Provider value={{ open, setOpen }}>
+      {children}
+      <CommandDialog open={open} onOpenChange={setOpen}>
+        <CommandInput
+          placeholder="Search chats or type to create new chat..."
+          value={search}
+          onValueChange={setSearch}
+        />
+        <CommandList>
+          <CommandEmpty>No chats found.</CommandEmpty>
+          <CommandGroup heading="Actions">
+            <CommandItem onSelect={handleNewChat}>
+              <Plus className="h-4 w-4" />
+              <span>New Chat</span>
+            </CommandItem>
+          </CommandGroup>
+          {filteredChats.length > 0 && (
+            <CommandGroup heading="Chats">
+              {filteredChats.map((chat) => (
+                <CommandItem
+                  key={chat.id}
+                  onSelect={() => handleSelectChat(chat.id)}
+                >
+                  <MessageCircle className="h-4 w-4" />
+                  <div className="flex flex-col min-w-0 flex-1">
+                    <span className="truncate">{chat.title}</span>
+                    {chat.description && (
+                      <span className="text-xs text-muted-foreground truncate">
+                        {chat.description}
+                      </span>
+                    )}
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          )}
+        </CommandList>
+      </CommandDialog>
+    </CommandKContext.Provider>
   );
+}
+
+export function useCommandK() {
+  const context = React.useContext(CommandKContext);
+  if (!context) {
+    throw new Error("useCommandK must be used within CommandKProvider");
+  }
+  return context;
+}
+
+export function CommandK() {
+  return null;
 }

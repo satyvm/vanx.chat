@@ -27,7 +27,7 @@ model User {
 }
 
 model Chat {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(uuid())
   title       String   @default("Untitled")
   description String?
   body        String

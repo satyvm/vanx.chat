@@ -4,5 +4,6 @@
       "mode": "auto"
     }
   ],
-  "kiroAgent.configureMCP": "Disabled"
+  "kiroAgent.configureMCP": "Disabled",
+  "cSpell.words": ["groq"]
 }

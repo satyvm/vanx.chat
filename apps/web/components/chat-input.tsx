@@ -8,14 +8,8 @@ import {
   type MouseEvent,
   type SyntheticEvent,
 } from "react";
-import { ArrowUpIcon, Plus } from "lucide-react";
+import { ArrowUpIcon, Loader2, Plus } from "lucide-react";
 
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@vanx/ui/components/dropdown-menu";
 import {
   InputGroup,
   InputGroupAddon,
@@ -82,14 +76,8 @@ export function ChatInput({
 
   return (
     <div className="w-full max-w-full">
-      <div className="flex justify-end mb-4">
-        <ModelSelector
-          value={selectedModel}
-          onValueChange={handleModelChange}
-        />
-      </div>
       <div className="w-full max-w-full min-w-0">
-        <InputGroup className="w-full max-w-full min-w-0">
+        <InputGroup className="w-full max-w-full min-w-0 rounded-xl">
           <InputGroupTextarea
             placeholder="Ask, Learn or Chat..."
             value={inputValue}
@@ -105,20 +93,13 @@ export function ChatInput({
             >
               <Plus />
             </InputGroupButton>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <InputGroupButton variant="ghost">Auto</InputGroupButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                side="top"
-                align="start"
-                className="[--radius:0.95rem]"
-              >
-                <DropdownMenuItem>Auto</DropdownMenuItem>
-                <DropdownMenuItem>Agent</DropdownMenuItem>
-                <DropdownMenuItem>Manual</DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <div className="flex items-center">
+              <ModelSelector
+                value={selectedModel}
+                onValueChange={handleModelChange}
+                className="h-auto border-0 bg-transparent shadow-none focus:ring-0 w-auto min-w-[120px]"
+              />
+            </div>
             <InputGroupText className="ml-auto">
               {inputValue.length} chars
             </InputGroupText>
@@ -132,7 +113,11 @@ export function ChatInput({
               }}
               disabled={isLoading || !inputValue}
             >
-              <ArrowUpIcon />
+              {isLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowUpIcon />
+              )}
               <span className="sr-only">Send</span>
             </InputGroupButton>
           </InputGroupAddon>

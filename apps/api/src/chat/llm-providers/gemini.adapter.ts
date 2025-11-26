@@ -1,11 +1,11 @@
 import { google } from '@ai-sdk/google';
-import { LanguageModel } from 'ai';
+import type { LanguageModelV2 } from '@ai-sdk/provider';
 import { ProviderAdapter } from './interfaces';
 
 const DEFAULT_MODEL = 'gemini-2.5-flash';
 
 export class GeminiAdapter implements ProviderAdapter {
-  getModel(modelId: string = DEFAULT_MODEL): LanguageModel {
+  getModel(modelId: string = DEFAULT_MODEL): LanguageModelV2 {
     // Default to flash if no model specified or if it's just 'gemini'
     const modelName = modelId === 'gemini' ? DEFAULT_MODEL : modelId;
     return google(modelName);

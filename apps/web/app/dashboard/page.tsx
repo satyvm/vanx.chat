@@ -12,23 +12,7 @@ import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 
 export default function Page() {
   return (
-    <DashboardLayout
-      breadcrumb={
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="#">Chats</BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>
-                Which is the best model for coding?
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      }
-    >
+    <DashboardLayout>
       <div className="bg-muted/50 flex-1 rounded-xl" />
       <ChatInput />
       <CommandK />
