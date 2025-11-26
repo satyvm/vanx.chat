@@ -19,7 +19,12 @@ export function MarkdownMessage({ content, className }: MarkdownMessageProps) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw, rehypeHighlight]}
         components={{
-          code({ node, inline, className: codeClassName, children, ...props }) {
+          code({
+            inline,
+            className: codeClassName,
+            children,
+            ...props
+          }: React.HTMLAttributes<HTMLElement> & { inline?: boolean }) {
             const match = /language-(\w+)/.exec(codeClassName || "");
             const language = match ? match[1] : "";
             return !inline ? (
