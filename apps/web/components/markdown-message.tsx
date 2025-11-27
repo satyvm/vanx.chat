@@ -58,10 +58,13 @@ const rehypeUnwrapInvalidParagraphs = () => {
 
     for (let i = 0; i < node.children.length; i += 1) {
       const child = node.children[i];
+      if (!child) {
+        continue;
+      }
       if (isElementNode(child) && child.tagName === "p") {
         if (hasBlockDescendant(child)) {
           // Replace the paragraph node with its children
-          node.children.splice(i, 1, ...child.children);
+          node.children.splice(i, 1, ...(child.children ?? []));
           i -= 1; // Re-evaluate the new child at this position
           continue;
         }
