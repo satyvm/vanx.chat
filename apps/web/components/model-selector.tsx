@@ -9,7 +9,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@vanx/ui/components/select";
-import { useEffect, useState } from "react";
 
 type ModelGroup = {
   label: string;
@@ -94,16 +93,6 @@ export function ModelSelector({
   onValueChange: (value: string) => void;
   className?: string;
 }) {
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
-  }
-
   return (
     <Select value={value} onValueChange={onValueChange}>
       <SelectTrigger className={className}>

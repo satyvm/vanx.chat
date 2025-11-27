@@ -29,7 +29,10 @@ export function CommandKProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const chatListContext = useChatListSafe();
 
-  const chats = chatListContext?.chats ?? [];
+  const chats = React.useMemo(
+    () => chatListContext?.chats ?? [],
+    [chatListContext?.chats],
+  );
   const setActiveChatId = chatListContext?.setActiveChatId;
 
   React.useEffect(() => {

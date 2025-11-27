@@ -25,8 +25,7 @@ import {
   TooltipTrigger,
 } from "@vanx/ui/components/tooltip";
 
-const SIDEBAR_COOKIE_NAME = "sidebar_state";
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const SIDEBAR_STORAGE_KEY = "sidebar_state";
 const SIDEBAR_WIDTH = "16rem";
 const SIDEBAR_WIDTH_MOBILE = "18rem";
 const SIDEBAR_WIDTH_ICON = "3rem";
@@ -66,30 +65,37 @@ function SidebarProvider({
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
+  const useIsomorphicLayoutEffect =
+    typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
+  const [isHydrated, setIsHydrated] = React.useState(false);
 
-  // This is the internal state of the sidebar.
-  // We use openProp and setOpenProp for control from outside the component.
-  // Initialize with defaultOpen to ensure SSR/client hydration match
+  // Initialize with defaultOpen so server/client markup match; update from storage after hydration.
   const [_open, _setOpen] = React.useState(defaultOpen);
   const open = openProp ?? _open;
 
-  // Read cookie after hydration to restore previous state (only once on mount)
-  React.useEffect(() => {
-    if (typeof document === "undefined" || openProp !== undefined) return;
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${SIDEBAR_COOKIE_NAME}=`);
-    if (parts.length === 2) {
-      const cookieValue = parts.pop()?.split(";").shift();
-      const cookieState = cookieValue === "true";
-      // Only update if different from current state
-      if (cookieState !== _open) {
-        _setOpen(cookieState);
+  useIsomorphicLayoutEffect(() => {
+    if (typeof window === "undefined") {
+      setIsHydrated(true);
+      return;
+    }
+
+    if (openProp !== undefined) {
+      setIsHydrated(true);
+      return;
+    }
+
+    const stored = window.localStorage.getItem(SIDEBAR_STORAGE_KEY);
+    if (stored !== null) {
+      const storedOpen = stored === "true";
+      if (storedOpen !== _open) {
+        _setOpen(storedOpen);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setIsHydrated(true);
+  }, [_open, openProp]);
+
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value;
@@ -99,8 +105,17 @@ function SidebarProvider({
         _setOpen(openState);
       }
 
-      // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      // Persist to localStorage so the sidebar state survives reloads without flicker.
+      if (typeof window !== "undefined") {
+        try {
+          window.localStorage.setItem(
+            SIDEBAR_STORAGE_KEY,
+            openState ? "true" : "false",
+          );
+        } catch (error) {
+          console.warn("Unable to persist sidebar state", error);
+        }
+      }
     },
     [setOpenProp, open],
   );
@@ -152,6 +167,7 @@ function SidebarProvider({
             {
               "--sidebar-width": SIDEBAR_WIDTH,
               "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+              visibility: isHydrated ? undefined : "hidden",
               ...style,
             } as React.CSSProperties
           }

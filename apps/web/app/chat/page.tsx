@@ -6,7 +6,6 @@ import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { useChatList } from "@/components/chat-list-provider";
 import { Button } from "@vanx/ui/components/button";
 import { Input } from "@vanx/ui/components/input";
-import { cn } from "@vanx/ui/lib/utils";
 
 function formatRelativeTime(dateString: string): string {
   const date = new Date(dateString);

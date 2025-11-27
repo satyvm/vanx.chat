@@ -5,7 +5,11 @@ import type { UIMessage } from "ai";
 import { cn } from "@vanx/ui/lib/utils";
 import { MarkdownMessage } from "./markdown-message";
 
-type ChatMessage = UIMessage & { content?: string };
+type ChatMessage = UIMessage & {
+  content?: string;
+  model?: string;
+  metadata?: unknown;
+};
 type MessagePart = ChatMessage["parts"][number];
 type TextPart = Extract<MessagePart, { type: "text" }>;
 
@@ -22,6 +26,14 @@ const getMessageText = (message: ChatMessage) => {
     .join("\n");
 };
 
+const getMessageModel = (message: ChatMessage) =>
+  message.model ??
+  (typeof message.metadata === "object" &&
+  message.metadata !== null &&
+  "model" in message.metadata
+    ? (message.metadata as { model?: string }).model
+    : undefined);
+
 export function MessageList({ messages }: { messages: ChatMessage[] }) {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -35,6 +47,7 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
       {messages.map((message) => {
         const text = getMessageText(message);
         const isUser = message.role === "user";
+        const model = getMessageModel(message);
         return (
           <div
             key={message.id}
@@ -52,6 +65,11 @@ export function MessageList({ messages }: { messages: ChatMessage[] }) {
                 content={text}
                 className={cn("text-foreground", isUser && "prose-invert")}
               />
+            )}
+            {!isUser && model && (
+              <div className="text-[11px] text-muted-foreground">
+                Model: {model}
+              </div>
             )}
           </div>
         );

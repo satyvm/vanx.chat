@@ -9,7 +9,11 @@ import { LLMFactory } from './llm-providers/factory';
 import { MemoryXService } from './memory-x.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 
-type ChatMessage = UIMessage & { content?: string };
+type ChatMessage = UIMessage & {
+  content?: string;
+  model?: string;
+  metadata?: { model?: string; [key: string]: unknown };
+};
 
 interface GenerateResponseOptions {
   modelId?: string;
@@ -98,7 +102,13 @@ export class ChatService {
     options: GenerateResponseOptions,
   ) {
     const { modelId, chatId, userId } = options;
-    const requestMessages = messages.map((message) => ({ ...message }));
+    const requestMessages: ChatMessage[] = messages.map((message) => ({
+      ...message,
+      metadata:
+        typeof message.metadata === 'object' && message.metadata !== null
+          ? (message.metadata as Record<string, unknown>)
+          : undefined,
+    }));
 
     try {
       // 1. Get Context from MemoryX
@@ -107,6 +117,7 @@ export class ChatService {
       // 2. Select Provider/Model
       this.logger.log(`Getting model: ${modelId ?? 'default'}`);
       let model = this.llmFactory.getModel(undefined, modelId);
+      let resolvedModelId = this.resolveModelId(modelId);
       const specVersion = (model as any)?.specificationVersion;
 
       if (specVersion && specVersion !== 'v2') {
@@ -114,6 +125,7 @@ export class ChatService {
           `Model ${modelId ?? 'default'} uses unsupported specification version ${specVersion}; falling back to default v2 model.`,
         );
         model = this.llmFactory.getModel('google', 'gemini-2.5-flash');
+        resolvedModelId = 'gemini-2.5-flash';
       }
 
       this.logger.log(`Model retrieved successfully`);
@@ -146,6 +158,8 @@ export class ChatService {
                 id: `assistant-${Date.now()}`,
                 role: 'assistant',
                 content: assistantText,
+                model: resolvedModelId,
+                metadata: { model: resolvedModelId },
                 parts: [
                   {
                     type: 'text',
@@ -161,6 +175,7 @@ export class ChatService {
                 userId,
                 chatId,
                 assistantText,
+                modelId: resolvedModelId,
                 messages: fullConversation,
               });
               await this.memoryX.saveInteraction(
@@ -195,13 +210,16 @@ export class ChatService {
     userId,
     chatId,
     assistantText,
+    modelId,
     messages,
   }: {
     userId: string;
     chatId?: string;
     assistantText: string;
+    modelId?: string;
     messages: ChatMessage[];
   }) {
+    void modelId;
     const payload = {
       title: this.buildTitle(messages),
       description: this.buildDescriptionFromText(assistantText),
@@ -228,6 +246,15 @@ export class ChatService {
       data: payload,
     });
     return chat.id;
+  }
+
+  private resolveModelId(modelId?: string) {
+    if (!modelId) return 'gemini-2.5-flash';
+    if (modelId === 'gemini') return 'gemini-2.5-flash';
+    if (modelId === 'openai') return 'gpt-4o';
+    if (modelId === 'groq') return 'llama-3.3-70b-versatile';
+    if (modelId === 'xai' || modelId === 'grok') return 'grok-4-1';
+    return modelId;
   }
 
   private buildTitle(messages: ChatMessage[]) {

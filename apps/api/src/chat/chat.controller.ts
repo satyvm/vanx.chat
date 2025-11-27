@@ -24,6 +24,23 @@ interface ChatRequestBody {
   id?: string;
 }
 
+type NormalizedChatMessage = UIMessage & {
+  content?: string;
+  model?: string;
+  metadata?: Record<string, unknown>;
+};
+
+const normalizeMessages = (messages?: UIMessage[]): NormalizedChatMessage[] => {
+  if (!messages) return [];
+  return messages.map((message) => ({
+    ...message,
+    metadata:
+      typeof message.metadata === 'object' && message.metadata !== null
+        ? (message.metadata as Record<string, unknown>)
+        : undefined,
+  }));
+};
+
 interface AuthenticatedRequest extends Request {
   user?: {
     id: string;
@@ -64,7 +81,7 @@ export class ChatController {
     const chat = await this.chatService.createChatDraft({
       userId,
       title: body.title,
-      messages: body.messages,
+      messages: normalizeMessages(body.messages),
     });
 
     return { id: chat.id };
@@ -82,11 +99,14 @@ export class ChatController {
       this.logger.log(
         `Chat request: model=${body.model ?? 'default'}, chatId=${body.chatId ?? body.id ?? 'new'}, messages=${body.messages?.length ?? 0}`,
       );
-      const result = await this.chatService.generateResponse(body.messages, {
-        modelId: body.model,
-        chatId: body.chatId ?? body.id,
-        userId,
-      });
+      const result = await this.chatService.generateResponse(
+        normalizeMessages(body.messages),
+        {
+          modelId: body.model,
+          chatId: body.chatId ?? body.id,
+          userId,
+        },
+      );
       this.logger.log('Streaming response started');
       result.pipeUIMessageStreamToResponse(res);
     } catch (error) {

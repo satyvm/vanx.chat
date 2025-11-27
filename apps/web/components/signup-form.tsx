@@ -66,7 +66,7 @@ export function SignupForm({
     try {
       const res = await verifyEmailCode(pendingEmail, verificationCode);
       if (res?.user) {
-        router.push("/dashboard");
+        router.push("/chat/new");
       }
     } catch (err) {
       const message =
