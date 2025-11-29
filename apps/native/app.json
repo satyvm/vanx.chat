@@ -1,0 +1,17 @@
+{
+	"expo": {
+		"scheme": "vanx.chat.v2",
+		"userInterfaceStyle": "automatic",
+		"orientation": "default",
+		"web": {
+			"bundler": "metro"
+		},
+		"name": "vanx.chat.v2",
+		"slug": "vanx.chat.v2",
+		"plugins": ["expo-font"],
+		"experiments": {
+			"typedRoutes": true,
+			"reactCompiler": true
+		}
+	}
+}
