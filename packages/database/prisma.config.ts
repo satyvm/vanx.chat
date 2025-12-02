@@ -1,6 +1,8 @@
 import 'dotenv/config';
+import type { PrismaConfig } from 'prisma';
 import { defineConfig } from 'prisma/config';
-import { buildDatabaseUrlFromEnv } from './src/config/database.config.js';
+
+import { buildDatabaseUrlFromEnv } from './src/database-url';
 
 const databaseUrl = buildDatabaseUrlFromEnv();
 
@@ -13,4 +15,4 @@ export default defineConfig({
   datasource: {
     url: databaseUrl,
   },
-});
+}) satisfies PrismaConfig;

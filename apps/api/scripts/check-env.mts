@@ -1,4 +1,4 @@
-#!/usr/bin/env node
+// @ts-nocheck
 /**
  * Diagnostics script to verify critical environment variables and service connectivity.
  *
@@ -8,7 +8,9 @@
 import { existsSync, readFileSync } from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { PrismaClient } from '@prisma/client';
+const { PrismaClient } = await import('../prisma/generated/prisma/client.js');
+import { PrismaPg } from '@prisma/adapter-pg';
+import pg from 'pg';
 import Queue from 'bull';
 import { Resend } from 'resend';
 
@@ -37,16 +39,15 @@ const SERVICE_CHECKS = [
     requires: ['DATABASE_URL'],
     run: async () => {
       const url = requireEnv('DATABASE_URL');
-      const prisma = new PrismaClient({
-        datasources: {
-          db: { url },
-        },
-      });
+      const pool = new pg.Pool({ connectionString: url });
+      const adapter = new PrismaPg(pool);
+      const prisma = new PrismaClient({ adapter });
 
       try {
         await withTimeout(prisma.$queryRaw`SELECT 1`, 'Postgres ping');
       } finally {
         await prisma.$disconnect();
+        await pool.end();
       }
     },
   },

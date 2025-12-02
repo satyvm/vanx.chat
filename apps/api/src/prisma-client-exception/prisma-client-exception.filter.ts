@@ -1,16 +1,22 @@
 import { ArgumentsHost, Catch, HttpStatus } from '@nestjs/common';
 import { BaseExceptionFilter } from '@nestjs/core';
-import { Prisma } from '@prisma/client';
+import type { Prisma } from '@vanx/database';
 import { Response } from 'express';
+import { prismaModulePromise } from '@vanx/database';
 
-@Catch(Prisma.PrismaClientKnownRequestError)
+@Catch()
 export class PrismaClientExceptionFilter extends BaseExceptionFilter {
-  catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
-    console.error(exception.message);
+  async catch(exception: unknown, host: ArgumentsHost) {
+    const { Prisma } = await prismaModulePromise;
+    if (!(exception instanceof Prisma.PrismaClientKnownRequestError)) {
+      return super.catch(exception, host);
+    }
+    const prismaException = exception as Prisma.PrismaClientKnownRequestError;
+    console.error(prismaException.message);
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    const message = exception.message.replace(/\n/g, '');
-    switch (exception.code) {
+    const message = prismaException.message.replace(/\n/g, '');
+    switch (prismaException.code) {
       case 'P2002': {
         const status = HttpStatus.CONFLICT;
         response.status(status).json({

@@ -8,6 +8,7 @@ RUN corepack enable && apk add --no-cache libc6-compat
 
 FROM base AS deps
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json tsconfig.json ./
+COPY .env.example ./apps/web/.env
 COPY packages ./packages
 COPY apps/web ./apps/web
 RUN --mount=type=cache,target=/pnpm/store pnpm install --frozen-lockfile

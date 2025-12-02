@@ -1,9 +1,17 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaPg } from '@prisma/adapter-pg';
 import bcrypt from 'bcrypt';
+import pg from 'pg';
+import { buildDatabaseUrlFromEnv } from '../src/database-url';
+import type { PrismaClient } from './generated/prisma/client.js';
 
-const prisma = new PrismaClient();
+const databaseUrl = buildDatabaseUrlFromEnv();
+const pool = new pg.Pool({ connectionString: databaseUrl });
+const adapter = new PrismaPg(pool);
+let prisma: PrismaClient | null = null;
 
 async function main() {
+  const { PrismaClient } = await import('./generated/prisma/client.js');
+  prisma = new PrismaClient({ adapter });
   console.log('🌱 Seeding database...');
 
   // Clear existing data
@@ -65,5 +73,8 @@ main()
     process.exit(1);
   })
   .finally(async () => {
-    await prisma.$disconnect();
+    if (prisma) {
+      await prisma.$disconnect();
+    }
+    await pool.end();
   });

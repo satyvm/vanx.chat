@@ -27,6 +27,6 @@ ENV PATH="$PNPM_HOME:$PATH" \
 RUN corepack enable && apk add --no-cache openssl libc6-compat
 COPY --from=builder /tmp/api ./
 RUN npm install -g prisma@^7.0.0
-RUN prisma generate --config=./prisma.config.js
+RUN prisma generate -- --config ./prisma.config.ts
 EXPOSE 3001
-CMD ["sh", "-c", "prisma migrate deploy --config=./prisma.config.js && node dist/src/main.js"]
+CMD ["sh", "-c", "prisma -- --config ./prisma.config.ts migrate deploy && node dist/src/main.js"]

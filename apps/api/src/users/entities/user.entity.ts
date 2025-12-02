@@ -1,6 +1,6 @@
 // src/users/entities/user.entity.ts
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '@prisma/client';
+import type { User } from '@vanx/database';
 import { Exclude } from 'class-transformer';
 
 export class UserEntity implements User {

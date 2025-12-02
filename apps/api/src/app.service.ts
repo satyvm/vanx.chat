@@ -15,7 +15,7 @@ export class AppService {
     database: string;
   }> {
     try {
-      await this.prisma.$queryRaw`SELECT 1`;
+      await this.prisma.client.$queryRaw`SELECT 1`;
       return {
         status: 'ok',
         timestamp: new Date().toISOString(),

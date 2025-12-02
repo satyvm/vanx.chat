@@ -1,4 +1,4 @@
-import { buildDatabaseUrlFromEnv } from './database.config.js';
+import { buildDatabaseUrlFromEnv } from '@vanx/database';
 import { buildRedisConfigFromEnv } from './redis.config.js';
 
 export function validateEnv(config: Record<string, unknown>) {

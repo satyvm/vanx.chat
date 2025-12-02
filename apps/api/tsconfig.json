@@ -1,6 +1,8 @@
 {
   "extends": "@vanx/typescript-config/nestjs.json",
   "compilerOptions": {
+    "declaration": false,
+    "declarationMap": false,
     "outDir": "./dist",
     "baseUrl": "./"
   }

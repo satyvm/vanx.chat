@@ -32,7 +32,7 @@ export class ChatService {
   ) {}
 
   async listChats(userId: string) {
-    return this.prisma.chat.findMany({
+    return this.prisma.client.chat.findMany({
       where: { userId },
       orderBy: { updatedAt: 'desc' },
       select: {
@@ -48,7 +48,7 @@ export class ChatService {
   async getChatById(chatId: string, userId: string) {
     let chat;
     try {
-      chat = await this.prisma.chat.findFirst({
+      chat = await this.prisma.client.chat.findFirst({
         // Casting id to `any` keeps compatibility while we finish migrating IDs to UUIDs.
         where: { id: this.coerceChatId(chatId), userId },
       });
@@ -83,7 +83,7 @@ export class ChatService {
     const computedTitle = title?.trim() || this.buildTitle(messages);
     const body = messages.length ? JSON.stringify(messages) : '[]';
 
-    const chat = await this.prisma.chat.create({
+    const chat = await this.prisma.client.chat.create({
       data: {
         title: computedTitle,
         description: this.buildDescriptionFromText(
@@ -229,7 +229,7 @@ export class ChatService {
 
     if (chatId) {
       try {
-        await this.prisma.chat.update({
+        await this.prisma.client.chat.update({
           where: { id: this.coerceChatId(chatId), userId },
           data: payload,
         });
@@ -242,7 +242,7 @@ export class ChatService {
       }
     }
 
-    const chat = await this.prisma.chat.create({
+    const chat = await this.prisma.client.chat.create({
       data: payload,
     });
     return chat.id;
