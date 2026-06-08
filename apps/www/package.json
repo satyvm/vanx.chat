@@ -14,28 +14,28 @@
 		"start": "astro start"
 	},
 	"dependencies": {
-		"@astrojs/react": "^4.4.0",
+		"@astrojs/react": "^4.4.2",
 		"@astrojs/sitemap": "^3.6.0",
-		"@fontsource/geist-mono": "^5.2.6",
-		"@fontsource/roboto": "^5.2.5",
-		"@tailwindcss/vite": "^4.1.5",
+		"@fontsource/geist-mono": "^5.2.7",
+		"@fontsource/roboto": "^5.2.8",
+		"@tailwindcss/vite": "^4.1.17",
 		"@vanx/ui": "workspace:*",
 		"astro": "^5.15.9",
 		"astro-robots-txt": "^1.0.0",
 		"astro-seo": "^0.8.4",
-		"lucide-react": "^0.508.0",
-		"react": "^19.1.0",
-		"react-dom": "^19.1.0",
-		"tailwindcss": "^4.1.5",
-		"vite": "^7.1.10"
+		"lucide-react": "^0.554.0",
+		"react": "^19.2.0",
+		"react-dom": "^19.2.0",
+		"tailwindcss": "^4.1.17",
+		"vite": "^7.2.2"
 	},
 	"devDependencies": {
 		"@vanx/eslint-config": "workspace:*",
 		"@vanx/typescript-config": "workspace:*",
-		"eslint": "^9.34.0",
-		"prettier": "^3.5.3",
+		"eslint": "^9.39.1",
+		"prettier": "^3.6.2",
 		"prettier-plugin-astro": "^0.14.1",
-		"prettier-plugin-tailwindcss": "^0.6.11",
-		"sharp": "^0.34.1"
+		"prettier-plugin-tailwindcss": "^0.7.1",
+		"sharp": "^0.34.5"
 	}
 }

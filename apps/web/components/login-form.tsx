@@ -46,7 +46,7 @@ export function LoginForm({
       if (res?.user) {
         const redirect = searchParams.get("redirect");
         const destination =
-          redirect && redirect.startsWith("/") ? redirect : "/dashboard";
+          redirect && redirect.startsWith("/") ? redirect : "/chat/new";
         router.push(destination);
       }
     } catch (err) {

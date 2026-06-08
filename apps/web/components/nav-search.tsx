@@ -4,6 +4,7 @@ import {
   SidebarGroup,
   SidebarMenu,
   SidebarMenuButton,
+  SidebarMenuItem,
   useSidebar,
 } from "@vanx/ui/components/sidebar";
 import {
@@ -17,23 +18,25 @@ export function NavSearch() {
   const isCollapsed = state === "collapsed";
 
   return (
-    <SidebarGroup className={isCollapsed ? "pb-0" : ""}>
-      {isCollapsed ? (
-        <SidebarMenu>
-          <SidebarMenuButton asChild>
-            <SearchIcon />
-          </SidebarMenuButton>
-        </SidebarMenu>
-      ) : (
-        <SidebarMenu>
-          <InputGroup>
-            <InputGroupInput placeholder="Search..." />
-            <InputGroupAddon>
-              <SearchIcon />
-            </InputGroupAddon>
-          </InputGroup>
-        </SidebarMenu>
-      )}
+    <SidebarGroup className="px-2">
+      <SidebarMenu>
+        <SidebarMenuItem>
+          {isCollapsed ? (
+            <SidebarMenuButton tooltip="Search">
+              <SearchIcon className="h-4 w-4 shrink-0" />
+            </SidebarMenuButton>
+          ) : (
+            <div className="w-full">
+              <InputGroup>
+                <InputGroupInput placeholder="Search..." />
+                <InputGroupAddon>
+                  <SearchIcon />
+                </InputGroupAddon>
+              </InputGroup>
+            </div>
+          )}
+        </SidebarMenuItem>
+      </SidebarMenu>
     </SidebarGroup>
   );
 }

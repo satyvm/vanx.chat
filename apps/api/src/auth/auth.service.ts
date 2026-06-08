@@ -6,13 +6,14 @@ import {
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
-import { User, VerificationCodeType } from '@prisma/client';
+import type { User } from '@vanx/database';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthEntity } from './entity/auth.entity';
 import { VerificationCodesService } from './verification-codes.service';
 import { MailService } from 'src/mail/mail.service';
+import { prismaModulePromise } from '@vanx/database';
 
 export class Tokens {
   accessToken: string;
@@ -32,6 +33,14 @@ export class AuthService {
     private readonly verificationCodesService: VerificationCodesService,
     private readonly mailService: MailService,
   ) {}
+
+  private verificationCodeTypePromise = prismaModulePromise.then(
+    (module) => module.VerificationCodeType,
+  );
+
+  private async getVerificationCodeType() {
+    return this.verificationCodeTypePromise;
+  }
 
   async validateUser(email: string, password: string) {
     const user = await this.usersService.findByEmail(email);
@@ -69,6 +78,7 @@ export class AuthService {
   }
 
   async verifyEmail(email: string, code: string) {
+    const VerificationCodeType = await this.getVerificationCodeType();
     await this.verificationCodesService.verifyCode({
       email,
       code,
@@ -97,6 +107,7 @@ export class AuthService {
     if (!user) {
       return;
     }
+    const VerificationCodeType = await this.getVerificationCodeType();
 
     const { code } = await this.verificationCodesService.createCode({
       email: user.email,
@@ -112,6 +123,7 @@ export class AuthService {
   }
 
   async confirmPasswordReset(email: string, code: string, password: string) {
+    const VerificationCodeType = await this.getVerificationCodeType();
     await this.verificationCodesService.verifyCode({
       email,
       code,
@@ -209,6 +221,7 @@ export class AuthService {
   }
 
   private async sendVerificationCode(user: User) {
+    const VerificationCodeType = await this.getVerificationCodeType();
     const { code } = await this.verificationCodesService.createCode({
       email: user.email,
       userId: user.id,

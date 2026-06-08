@@ -74,7 +74,20 @@ Create `.env.local` in the `apps/api` directory:
 
 ```bash
 # Database
+# Option A: provide the full connection string
 DATABASE_URL=postgresql://user:pass@localhost:5432/vanx_dev
+
+# Option B: let the API build DATABASE_URL from individual values
+POSTGRES_USER=vanx
+POSTGRES_PASSWORD=vanx
+POSTGRES_HOST=localhost
+POSTGRES_DB=vanx
+POSTGRES_PORT=5432
+
+# Redis (optional, defaults shown)
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+# REDIS_PASSWORD=super-secret
 
 # Authentication
 JWT_SECRET=your-super-secret-jwt-key
@@ -85,8 +98,10 @@ WEB_APP_URL=http://localhost:3000
 
 # AI Provider APIs
 OPENAI_API_KEY=sk-...
+XAI_API_KEY=xai-...
+GROQ_API_KEY=gsk_...
+GOOGLE_GENERATIVE_AI_API_KEY=...
 ANTHROPIC_API_KEY=sk-ant-...
-GOOGLE_AI_API_KEY=...
 
 # Application
 NODE_ENV=development

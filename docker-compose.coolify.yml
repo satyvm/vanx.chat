@@ -70,6 +70,28 @@ services:
           cpus: "0.1"
           memory: 64M
 
+  api-migrations:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.dev
+    networks:
+      - vanx-network
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-vanx}:${POSTGRES_PASSWORD:-vanx}@${POSTGRES_HOST:-postgres}:${POSTGRES_PORT:-5432}/${POSTGRES_DB:-vanx}
+    command: sh -c "cd node_modules/@vanx/database && prisma migrate deploy"
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 256M
+        reservations:
+          cpus: "0.1"
+          memory: 64M
+
   api:
     build:
       context: .
@@ -90,6 +112,14 @@ services:
       REDIS_HOST: ${REDIS_HOST:-redis}
       REDIS_PORT: ${REDIS_PORT:-6379}
       REDIS_PASSWORD: ${REDIS_PASSWORD:-vanx}
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      RESEND_FROM_EMAIL: ${RESEND_FROM_EMAIL:-}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${GOOGLE_GENERATIVE_AI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      XAI_API_KEY: ${XAI_API_KEY:-}
+      GROQ_API_KEY: ${GROQ_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      CEREBRAS_API_KEY: ${CEREBRAS_API_KEY:-}
     healthcheck:
       test:
         ["CMD-SHELL", "wget -q --spider http://localhost:3001/health || exit 1"]
@@ -98,6 +128,8 @@ services:
       retries: 5
       start_period: 30s
     depends_on:
+      api-migrations:
+        condition: service_completed_successfully
       postgres:
         condition: service_healthy
       redis:

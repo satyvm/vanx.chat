@@ -4,7 +4,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { VerificationCodeType } from '@prisma/client';
+import type { VerificationCodeType } from '@vanx/database';
 import * as bcrypt from 'bcrypt';
 
 const CODE_LENGTH = 6;
@@ -35,7 +35,7 @@ export class VerificationCodesService {
         1000 * 60 * (options.expiresInMinutes ?? DEFAULT_EXPIRATION_MINUTES),
     );
 
-    await this.prisma.verificationCode.create({
+    await this.prisma.client.verificationCode.create({
       data: {
         email: this.normalizeEmail(options.email),
         codeHash,
@@ -49,7 +49,7 @@ export class VerificationCodesService {
   }
 
   async verifyCode(options: VerifyCodeOptions) {
-    const record = await this.prisma.verificationCode.findFirst({
+    const record = await this.prisma.client.verificationCode.findFirst({
       where: {
         email: this.normalizeEmail(options.email),
         type: options.type,
@@ -79,7 +79,7 @@ export class VerificationCodesService {
 
   private async consume(id: string) {
     try {
-      await this.prisma.verificationCode.update({
+      await this.prisma.client.verificationCode.update({
         where: { id },
         data: { consumedAt: new Date(), attempts: { increment: 1 } },
       });
@@ -91,7 +91,7 @@ export class VerificationCodesService {
   }
 
   private async incrementAttempts(id: string) {
-    await this.prisma.verificationCode.update({
+    await this.prisma.client.verificationCode.update({
       where: { id },
       data: { attempts: { increment: 1 } },
     });

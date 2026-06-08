@@ -3,6 +3,7 @@
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { AuthSync } from "@/components/auth-sync";
+import { CommandKProvider } from "@/components/command-k";
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -13,8 +14,10 @@ export function Providers({ children }: { children: React.ReactNode }) {
       disableTransitionOnChange
       enableColorScheme
     >
-      <AuthSync />
-      {children}
+      <CommandKProvider>
+        <AuthSync />
+        {children}
+      </CommandKProvider>
     </NextThemesProvider>
   );
 }
