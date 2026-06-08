@@ -44,7 +44,10 @@ RUN corepack enable && apk add --no-cache openssl libc6-compat
 # Copy complete deployment including all dependencies
 COPY --from=builder /tmp/api ./
 
+# Install Prisma CLI for migrations (development version)
+RUN npm install -g prisma@^7.0.0
+
 EXPOSE 3001
 
-# Production: No Prisma CLI, migrations handled separately via CI/CD
-CMD ["node", "dist/src/main.js"]
+# Run migrations from database package, then start API
+CMD ["sh", "-c", "cd node_modules/@vanx/database && prisma migrate deploy && cd /app && node dist/src/main.js"]
