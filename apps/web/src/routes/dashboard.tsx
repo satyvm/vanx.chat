@@ -1,8 +1,8 @@
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, redirect } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import { trpc } from "@/utils/trpc";
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/dashboard")({
 	component: RouteComponent,
@@ -24,7 +24,8 @@ function RouteComponent() {
 
 	const privateData = useQuery(trpc.privateData.queryOptions());
 
-	const hasProSubscription = customerState?.activeSubscriptions?.length! > 0;
+	const hasProSubscription =
+		(customerState?.activeSubscriptions?.length ?? 0) > 0;
 	console.log("Active subscriptions:", customerState?.activeSubscriptions);
 
 	return (

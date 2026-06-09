@@ -1,8 +1,8 @@
-import { authClient } from "@/lib/auth-client";
 import { QueryClient } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
 import type { AppRouter } from "@vanx.chat.v2/api/routers/index";
+import { authClient } from "@/lib/auth-client";
 
 export const queryClient = new QueryClient();
 
