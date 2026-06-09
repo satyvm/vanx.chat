@@ -1,28 +1,26 @@
 {
-  "name": "@vanx.chat.v2/auth",
-  "exports": {
-    ".": {
-      "default": "./src/index.ts"
-    },
-    "./*": {
-      "default": "./src/*.ts"
-    }
-  },
-  "type": "module",
-  "scripts": {},
-  "devDependencies": {
-    "@vanx.chat.v2/config": "workspace:*"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "better-auth": "catalog:",
-    "@better-auth/expo": "catalog:",
-    "@polar-sh/better-auth": "catalog:",
-    "@polar-sh/sdk": "^0.34.16",
-    "dotenv": "catalog:",
-    "zod": "^4.1.11",
-    "@vanx.chat.v2/db": "workspace:*"
-  }
+	"name": "@vanx.chat.v2/auth",
+	"exports": {
+		".": {
+			"default": "./src/index.ts"
+		},
+		"./*": {
+			"default": "./src/*.ts"
+		}
+	},
+	"type": "module",
+	"scripts": {},
+	"devDependencies": {
+		"@vanx.chat.v2/config": "workspace:*"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"better-auth": "catalog:",
+		"@better-auth/expo": "catalog:",
+		"dotenv": "catalog:",
+		"zod": "^4.1.11",
+		"@vanx.chat.v2/db": "workspace:*"
+	}
 }
